@@ -3,6 +3,10 @@ Simple Mapping Of Our Vicinities
 
 ## Setup
 
+### Setup for interactive use
+| :warning: **If you are NOT running your code in batch mode**: See section for setup for non-interactive use |
+| --- |
+
 The first thing you'll want to do is edit your `.Rprofile` file to add the
 path you want the smoov package to use to store the relevant shapefiles.
 
