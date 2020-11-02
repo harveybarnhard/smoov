@@ -1,10 +1,11 @@
 # smoov
-Simple Mapping Of Our Vicinities
+This is a package intended to smooth over the process of mapping common objects like states, counties,
+and census tracts. This package enables **s**imple **m**apping **o**f **o**ur **v**icinities.
 
 ## Setup
 
 ### Setup for interactive use
-| :warning: **If you are NOT running your code in batch mode**: See section for setup for non-interactive use |
+| :warning: **If you are NOT running your code in batch mode**: See section setup for non-interactive use |
 | --- |
 
 The first thing you'll want to do is edit your `.Rprofile` file to add the
@@ -32,3 +33,5 @@ so that all the objects that make up the smoov package don't clutter up
 your environment if you are working interactively. 
 
 Now save the `.Rprofile` file and exit. You then must restart R prior to using smoov.
+
+### Setup for non-interactive use
