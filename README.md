@@ -5,7 +5,7 @@ and census tracts. This package enables **s**imple **m**apping **o**f **o**ur **
 ## Setup
 
 ### Setup for interactive use
-| :warning: **If you are NOT running your code in batch mode**: See section setup for non-interactive use |
+| :warning: **If you are NOT running your code interactively mode**: See section setup for non-interactive use |
 | --- |
 
 The first thing you'll want to do is edit your `.Rprofile` file to add the
