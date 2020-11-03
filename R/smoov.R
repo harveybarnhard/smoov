@@ -15,6 +15,9 @@
 #'     Optional parameters depending on choice of \code{shape}.
 
 smoov = function(geo, data, value , bins=5, ...){
+  if(!exists(".smoov_env")){
+    stop("smoov environment does not exist")
+  }
   arguments = list(...)
   return(arguments)
   # Create smoov environment if it does not already exist

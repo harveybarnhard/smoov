@@ -8,17 +8,15 @@
 smoov_setup = function(smoovpath){
   envpath = file.path(smoovpath, "smoov", "smoov_env.rds")
   if(!file.exists(envpath)){
-    # If the smoov environment file does not exist, create the smoov folder
-    # if it does not yet exist, then create and save the smoov environment
+    # Create smoov environment
     dir.create(file.path(smoovpath, "smoov"), showWarnings=FALSE)
     .smoov_env = new.env()
-    assign("smoovpath", file.path(smoovpath), envir=.smoov_env)
+    # Add smoov path to environment
+    assign("smoovpath", file.path(smoovpath, "smoov"), envir=.smoov_env)
+    # TODO add default theme to environment
     saveRDS(.smoov_env, envpath)
-    
-    # Create 
   }else{
-    # If the smoov environment file does exist, load it
+    # Load smoov environment
     .smoov_env = readRDS(envpath)
   }
-  
 }
