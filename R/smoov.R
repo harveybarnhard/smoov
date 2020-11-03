@@ -1,22 +1,32 @@
 #' Simple mapping tool
 #'
-#' @param shape 
+#' @param geo 
 #'     Character string; Provide level of map geography e.g. county.
 #'     See details below for more information 
 #' @param data
-#'
+#'     Dataframe; ID columns matching the level of geography. See details
+#'     for more information on column naming
+#' @param value
+#'     character; Name of the column in \code{data} with which a
+#'     choropleth is created.
+#' @param bins
+#'     integer; 5 by default.
 #' @param ...
 #'     Optional parameters depending on choice of \code{shape}.
-#'    
-#'
-smoov = function(geo, ...){
+
+smoov = function(geo, data, value , bins=5, ...){
   arguments = list(...)
   return(arguments)
-  # Create smoov environment if it does not already exist and pull basepath
+  # Create smoov environment if it does not already exist
   if(!exists(".smoov_env")){
     .smoov_env = new.env()
-    assign("smoovpath", envir=.smoov_env)
   }
+  
+  # Load shapefile
+  smoov_load(geo, data) #TODO create smoov_load()
+  
+  # Plot shapefile
+  smoov_plot() #TODO create smoov_plot()
   
   # Handle geography input
   if(geo%in%c("state", "states")){
@@ -38,18 +48,6 @@ smoov = function(geo, ...){
     stop(paste0(geo, " is not a mappable geography with smoov"))
   }
   
-  # Load shapefile if it is not already loaded
-  if(!exists(, envir=.smoov_env))
-  assign(
-    "shp",
-    rgdal::readOGR(
-      dsn=file.path(smoovpath, shape),
-      layer=shape
-    ),
-    envir = .smoov_env
-  )
-  shp = rgdal::readOGR(
-    dsn=file.path(smoovpath, shape),
-    layer=shape
-  )
+  # l
+
 }
