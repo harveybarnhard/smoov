@@ -2,7 +2,8 @@
 
 # Create function to load tract maps
 tract_maps = function(st, yr, coarse){
-  trpoly = tigris::tracts(state=st, year=yr, cb=coarse)
+  trpoly = tigris::tracts(state=st, year=yr, cb=coarse, class="sp")
+  fortify(trpoly)
 }
 
 # Load state abbreviations, adding DC
@@ -25,3 +26,5 @@ counties2010   = tigris::counties(cb=FALSE, year=2010)
 
 # Non-detailed counties
 counties2010   = tigris::counties(cb=TRUE, year=2010)
+
+#TODO figure out the best way to fortify for ggplot...this is slow
