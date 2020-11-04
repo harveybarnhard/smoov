@@ -10,7 +10,7 @@ smoov_load = function(geo, data){
   if(!file.exists(shppath)){
     stop(paste0(shape, " is not a mappable geography with smoov."))
   }else{
-    assign(shape, readRDS(shppath), envir=.smoov_env)
+    do.call(`::`, list("smoov", shape))
   }
   
   # Merge data onto shapefile
@@ -21,3 +21,5 @@ smoov_load = function(geo, data){
 smoov_plot = function(){
   
 }
+
+# do.call(`::`, list("smoov", "geo_table"))
