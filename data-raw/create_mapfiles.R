@@ -1,13 +1,14 @@
 # Create state, county, and tract files for each state and the nation as a whole
 
 # Function to load tract maps
-load_merge_tracts = function(state, cb, year, class, outname){
-  tract_cols = c("AREA", "STATE", "COUNTY", "TRACT")
+load_merge_tracts = function(cb, year, class, outname){
+  colsTRUE2000 = c("AREA", "STATE", "COUNTY", "TRACT")
+  colsFALSE2000 = c("ALAND00", "STATEFP00", "COUNTYFP00", "TRACTCE00")
   for(i in 1:length(state.abb)){
     tractmap = tigris::tracts(state=state.abb[i],
                               cb=cb,
                               year=year,
-                              class=class)[, tract_cols]
+                              class=class)[, get(paste0("cols", cb, year))]
     if(i==1){
       assign(outname, tractmap, envir=.GlobalEnv)
     }else{
@@ -38,7 +39,7 @@ for(geo in c("tracts", "counties")){
         # Handle tracts and counties differently
         if(geo=="tracts"){
           # Load each state's tracts one-by-one then bind them together
-          load_merge_tracts(state.abb[i], coarse, yr, cl, outname)
+          load_merge_tracts(coarse, yr, cl, outname)
         }else if(geo=="counties"){
           load_counties(coarse, yr, cl, outname)
         }
