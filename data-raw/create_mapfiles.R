@@ -41,9 +41,17 @@ load_merge_tracts = function(cb, yr, cl, outname){
       assign(outname, rbind(get(outname), tractmap), envir=.GlobalEnv)
     }
   }
-  # If class=="sp" then the file must be fortified
+  
+  # If class=="sp" then the file must be fortified into a data.frame format
   if(cl=="sp"){
-    assign
+    suppressMessages(shp_map <- ggplot2::fortify(get(outname)))
+    shp_dt = get(outname)@data
+    shp_dt$id = rownames(shp_dt)
+    rownames(shp_dt) = c()
+    shp_map = merge(shp_map, shp_dt, by="id", all.x=TRUE)
+    shp_map$id = c()
+    assign(outname, shp_map, envir=.GlobalEnv)
+    gc()
   }
 }
 
@@ -70,8 +78,8 @@ geo_wrapper = function(vec){
 
 # Load state abbreviations, adding DC
 data(state)
-state.abb = c(state.abb, "DC")
-#state.abb = "IN"
+#state.abb = c(state.abb, "DC")
+state.abb = "IN"
 
 # Find cartesian product of values to loop through
 target = expand.grid(geo   = c("tracts", "counties"),
@@ -83,4 +91,9 @@ target$outname = paste0(target$geo,
                         target$yr,
                         target$cb,
                         target$cl)
+
+#TODO Only load data when necessary (do this by removing rows of target)
 apply(target, 1, geo_wrapper)
+
+
+#TODO figure out why sp shapefiles are outputted in the console
