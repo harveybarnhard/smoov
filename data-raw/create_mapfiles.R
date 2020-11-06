@@ -8,15 +8,15 @@ cols[["colsFALSE2000"]] = c("ALAND00", "CTIDFP00")
 cols[["colsTRUE2010"]]  = c("CENSUSAREA", "STATE", "COUNTY", "TRACT")
 cols[["colsFALSE2010"]] = c("ALAND10", "GEOID10")
 load_merge_tracts = function(cb, yr, cl, outname){
-  coliter = paste0("cols", cb, yr)
+  coliter = cols[[paste0("cols", cb, yr)]]
   if(cl=="sf"){
-    cols[[coliter]] = c(cols[[coliter]], "geometry")
+    coliter = c(coliter, "geometry")
   }
   for(i in 1:length(state.abb)){
     tractmap = tigris::tracts(state=state.abb[i],
                               cb=cb,
                               year=yr,
-                              class=cl)[, cols[[coliter]]]
+                              class=cl)[, coliter]
     # Concatenate local fips to create state-county-tract fips code
     if(cb){
       tractmap$fips = paste0(tractmap$STATE, tractmap$COUNTY, tractmap$TRACT)
@@ -26,18 +26,24 @@ load_merge_tracts = function(cb, yr, cl, outname){
         tractmap = tractmap[, c("CENSUSAREA", "fips")]
       }
     }
+    
     # Rename columns
     if(cl=="sf"){
-      colnames(tractmap) = c("area", "fips")
+      colnames(tractmap) = c("area", "fips", "geometry")
     }else if(cl=="sp"){
       colnames(tractmap@data) = c("area", "fips")
     }
+    
     # Save into global environment
     if(i==1){
       assign(outname, tractmap, envir=.GlobalEnv)
     }else{
       assign(outname, rbind(get(outname), tractmap), envir=.GlobalEnv)
     }
+  }
+  # If class=="sp" then the file must be fortified
+  if(cl=="sp"){
+    assign
   }
 }
 
@@ -54,7 +60,7 @@ geo_wrapper = function(vec){
   yr  = as.integer(vec[3])
   cl  = as.character(vec[4])
   outname = vec[5]
-  cat(geo, cb, yr, cl, "\n")
+  cat(geo, cb, yr, cl)
   if(geo=="tracts"){
     load_merge_tracts(cb, yr, cl, outname)
   }else if(geo=="counties"){
@@ -64,8 +70,8 @@ geo_wrapper = function(vec){
 
 # Load state abbreviations, adding DC
 data(state)
-# state.abb = c(state.abb, "DC")
-state.abb = "IN"
+state.abb = c(state.abb, "DC")
+#state.abb = "IN"
 
 # Find cartesian product of values to loop through
 target = expand.grid(geo   = c("tracts", "counties"),
