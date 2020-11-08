@@ -15,6 +15,7 @@
 #'     `"sp"` or `"sf"`; `"sf"` by default. See details.
 #' @param ...
 #'     Optional parameters depending on choice of `shape`.
+#' @export
 
 smoov = function(geo, data, value=NA, bins=5, class="sf", ...){
   if(!exists(".smoov_env")){

@@ -1,5 +1,4 @@
 #' Helper function for smoov_setup.R
-#'
 
 # Load county, tract, and state shapefiles
 create_mapfiles = function(us_geos){

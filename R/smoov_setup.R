@@ -7,6 +7,8 @@
 #'     counties, and states.
 #' @param load_roads logical; FALSE by default. If TRUE then loads US roads
 #'     for counties of the top 25 US cities by population
+#'     
+#' @export
 smoov_setup = function(load_mapfiles=FALSE,
                        load_us_geos=FALSE,
                        load_roads=FALSE){
@@ -41,13 +43,14 @@ smoov_setup = function(load_mapfiles=FALSE,
   }
   
   # Load mapfiles, ignoring mapfiles that have not already been loaded
-  objects_in_memory = ls()
   if(load_mapfiles){
     create_mapfiles(us_geos=TRUE)
-    # smoov::create_roads()
-    # smoov::create_districts
+    # create_roads()
+    # create_districts
   }else if(load_us_geos){
     create_mapfiles(us_geos=TRUE)
   }
-  rm(list=setdiff(ls(), objects_in_memory))
+  
+  # Save .smoov_env in case anything has changed
+  saveRDS(.smoov_env, envpath)
 }

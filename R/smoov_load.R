@@ -17,9 +17,4 @@ smoov_load = function(geo, data){
   
 }
 
-#TODO make smoov_plot its own thing
-smoov_plot = function(){
-  
-}
-
 # do.call(`::`, list("smoov", "geo_table"))
