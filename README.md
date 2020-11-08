@@ -10,6 +10,7 @@ just this purpose.
 
 For reproducability, this step should be placed at the top of the project file where
 you are loading all of your r packages, e.g.
+
 ```r
 library(data.table)
 library(smoov)
