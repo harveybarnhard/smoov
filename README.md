@@ -2,6 +2,8 @@
 This is a package intended to smooth over the process of mapping common objects like states, counties,
 and census tracts. This package enables **s**imple **m**apping **o**f **o**ur **v**icinities.
 
+For mapping purposes, this package relies heavily upon `ggplot2` while the loading of
+
 ## Setup
 
 Before using `smoov`, the shapefiles must be downloaded and converted to .rds files for
