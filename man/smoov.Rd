@@ -2,13 +2,26 @@
 % Please edit documentation in R/smoov.R
 \name{smoov}
 \alias{smoov}
-\title{Function for doing something}
+\title{Simple mapping tool}
 \usage{
-smoov(x)
+smoov(geo, data, value = NA, bins = 5, class = "sf", ...)
 }
 \arguments{
-\item{x}{}
+\item{geo}{Character string; Provide level of map geography e.g. county.
+See details below for more information}
+
+\item{data}{Dataframe; ID columns matching the level of geography. See details.}
+
+\item{value}{character; Name of the column in \code{data} with which a
+choropleth is created. If no column is provided, a map of boundaries
+is produced.}
+
+\item{bins}{integer; 5 by default.}
+
+\item{class}{\code{"sp"} or \code{"sf"}; \code{"sf"} by default. See details.}
+
+\item{...}{Optional parameters depending on choice of \code{shape}.}
 }
 \description{
-Function for doing something
+Simple mapping tool
 }

@@ -24,10 +24,6 @@ geo_table = data.frame(
 
 usethis::use_data(
   geo_table,
-  tracts2000,
-  tracts2010,
-  states,
-  counties,
   internal=TRUE
 )
 
