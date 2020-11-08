@@ -4,29 +4,14 @@ and census tracts. This package enables **s**imple **m**apping **o**f **o**ur **
 
 ## Setup
 
-### Setup for interactive use
-| :warning: **If you are NOT running your code interactively mode**: See section setup for non-interactive use |
-| --- |
+Before using `smoov`, the shapefiles must be downloaded and converted to .rds files for
+efficient loading and use by `smoov` functions. The function `smoov_setup()` serves
+just this purpose.
 
-The first thing you'll want to do is edit your `.Rprofile` file to add the
-path you want the smoov package to use to store the relevant shapefiles.
-
-The easiest way to edit your `.Rprofile` is to run the following command in
-RStudio.
-
+For reproducability, this step should be placed at the top of the project file where
+you are loading all of your r packages, e.g.
 ```r
-usethis::edit_r_profile()
+library(data.table)
+library(smoov)
+smoov_setup()
 ```
-
-Running this command pulls up your `.Rprofile` file. On a new line, enter the
-following code,
-
-```r
-options(smoovpath="C:/Users/hab737/GitHub/smoov")
-```
-replacing `C:/Users/Harvey/shapefiles` with the exact filepath
-where you want your smoov shapefiles to be loaded and stored.
-
-Now save the `.Rprofile` file and exit. You then must restart R prior to using smoov.
-
-### Setup for non-interactive use
