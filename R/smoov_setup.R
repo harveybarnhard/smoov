@@ -9,7 +9,8 @@ smoov_setup = function(smoovpath){
   envpath = file.path(smoovpath, "smoov", "smoov_env.rds")
   if(!file.exists(envpath)){
     # Create smoov environment
-    dir.create(file.path(smoovpath, "smoov"), showWarnings=FALSE)
+    dir.create(file.path(options("smoovpath")$smoovpath, "smoov"),
+               showWarnings=FALSE)
     .smoov_env = new.env()
     # Add smoov path to environment
     assign("smoovpath", file.path(smoovpath, "smoov"), envir=.smoov_env)
