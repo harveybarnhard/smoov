@@ -74,6 +74,7 @@ geo_wrapper = function(vec){
   }else if(geo=="counties"){
     load_counties(cb, yr, cl, outname)
   }
+  saveRDS(get(outname), file=)
 }
 
 # Load state abbreviations, adding DC
