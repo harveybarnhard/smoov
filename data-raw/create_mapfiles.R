@@ -1,6 +1,6 @@
 # Create state, county, and tract files for each state and the nation as a whole
 
-# Function to load tract maps
+# Function to load tract maps ==================================================
 # Columns to pull from map files: cols[cb][year]
 cols = list()
 cols[["colsTRUE2000"]]  = c("AREA", "STATE", "COUNTY", "TRACT")
@@ -55,14 +55,14 @@ load_merge_tracts = function(cb, yr, cl, outname){
   }
 }
 
-# Function to load county maps
+# Function to load county maps =================================================
 load_counties = function(cb, yr, cl, outname){
   # Suppress warnings about CRS object 
   suppressWarnings(countymap <- tigris::counties(cb=cb, year=yr, class=cl))
   assign(outname, countymap, envir=.GlobalEnv)
 }
 
-# Wrapper for state and county loading
+# Wrapper for state and county loading =========================================
 geo_wrapper = function(vec, outpath){
   # Arguments
   geo     = as.character(vec[1])
@@ -97,6 +97,8 @@ geo_wrapper = function(vec, outpath){
   })
 }
 
+# Load county and tract shapefiles =============================================
+
 # Load state abbreviations, adding DC
 data(state)
 state.abb = c(state.abb, "DC")
@@ -121,11 +123,4 @@ if(is.null(options("smoovpath"))){
 }
 dir.create(outpath, showWarnings=FALSE)
 
-#TODO Only load data when necessary (do this by removing rows of target)
 garbage = apply(target, 1, geo_wrapper, outpath=outpath)
-
-
-
-
-
-
