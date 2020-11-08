@@ -22,8 +22,7 @@ Running this command pulls up your `.Rprofile` file. On a new line, enter the
 following code,
 
 ```r
-library(smoov)
-smoov::smoov_setup("C:/Users/Harvey/shapefiles")
+options(smoovpath="C:/Users/hab737/GitHub/smoov")
 ```
 replacing `C:/Users/Harvey/shapefiles` with the exact filepath
 where you want your smoov shapefiles to be loaded and stored.
