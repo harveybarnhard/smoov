@@ -4,11 +4,20 @@
 \alias{smoov}
 \title{Simple mapping tool}
 \usage{
-smoov(geo, data, value = NA, bins = 5, class = "sf", ...)
+smoov(
+  geo,
+  data,
+  value = NA,
+  bins = 5,
+  year = 2010,
+  detailed = FALSE,
+  class = "sf",
+  ...
+)
 }
 \arguments{
 \item{geo}{Character string; Provide level of map geography e.g. county.
-See details below for more information}
+See details.}
 
 \item{data}{Dataframe; ID columns matching the level of geography. See details.}
 
@@ -18,9 +27,15 @@ is produced.}
 
 \item{bins}{integer; 5 by default.}
 
+\item{year}{integer; Currently either 2000 or 2010. Year of census geography. The
+most recent year by default.}
+
+\item{detailed}{logical; FALSE by default. If TRUE, then  more detailed geographies are
+used when available. See details.}
+
 \item{class}{\code{"sp"} or \code{"sf"}; \code{"sf"} by default. See details.}
 
-\item{...}{Optional parameters depending on choice of \code{shape}.}
+\item{...}{Optional parameters depending on choice of \code{shape}. See details}
 }
 \description{
 Simple mapping tool

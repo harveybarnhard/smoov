@@ -55,6 +55,7 @@ load_merge_tracts = function(cb, yr, cl, outname){
 
 # Function to load county maps =================================================
 load_counties = function(cb, yr, cl, outname){
+  #TODO rename and subset
   # Suppress warnings about CRS object 
   suppressWarnings(countymap <- tigris::counties(cb=cb, year=yr, class=cl))
   assign(outname, countymap, envir=.GlobalEnv)
@@ -62,6 +63,7 @@ load_counties = function(cb, yr, cl, outname){
 
 # Function to load state maps ==================================================
 load_states = function(cb, yr, cl, outname){
+  # TODO rename and subset
   # suppress warnings about CRS object
   suppressWarnings(statemap <- tigris::states(cb=cb, year=yr, class=cl))
   assign(outname, statemap, envir=.GlobalEnv)
