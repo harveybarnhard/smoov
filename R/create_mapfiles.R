@@ -20,6 +20,9 @@ create_mapfiles = function(us_geos){
                            target$cl,
                            sep="_")
     
+    # Remove detailed county maps
+    target = target[!(target$cb=="detailed" & target$geo=="counties"),]
+    
     # Find path to save objects
     smoovpath = local(smoovpath, envir=.smoov_env)
     garbage = apply(target, 1, smoov::geo_loader, outpath=smoovpath)

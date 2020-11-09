@@ -11,7 +11,7 @@ load_merge_tracts = function(cb, yr, cl, outname){
     coliter = c(coliter, "geometry")
   }
   for(i in 1:length(state.abb)){
-    suppressMessages(tractmap <- tigris::tracts(state=state.abb[i],
+    suppressWarnings(tractmap <- tigris::tracts(state=state.abb[i],
                                                 cb=cb,
                                                 year=yr,
                                                 class=cl)[, coliter])
