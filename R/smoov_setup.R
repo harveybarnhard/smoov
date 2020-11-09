@@ -12,7 +12,7 @@
 smoov_setup = function(load_mapfiles=FALSE,
                        load_us_geos=FALSE,
                        load_roads=FALSE){
-  # Create smoov directory if it does not already exist
+  # Create smoov path
   if(is.null(options("smoovpath"))){
     smoovpath = file.path(find.package("smoov"), "smoov_mapfiles")
   }else{
@@ -45,8 +45,8 @@ smoov_setup = function(load_mapfiles=FALSE,
   # Load mapfiles, ignoring mapfiles that have not already been loaded
   if(load_mapfiles){
     create_mapfiles(us_geos=TRUE)
-    # create_roads()
-    # create_districts
+    # TODO: create_roads()
+    # TODO: create_districts
   }else if(load_us_geos){
     create_mapfiles(us_geos=TRUE)
   }

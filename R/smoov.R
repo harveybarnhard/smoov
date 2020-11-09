@@ -11,7 +11,8 @@
 #'     is produced. If more than one value is inputted, a facetted map is
 #'     created.
 #' @param id
-#'     character; Name of the column in `data` that provides the relevant
+#'     character; "fips" by default.
+#'     Name of the column in `data` that provides the relevant
 #'     geography identifier (e.g. FIPS code).
 #' @param bins
 #'     integer; 5 by default.
@@ -30,17 +31,34 @@
 smoov = function(geo,
                  data,
                  value=NA,
-                 id,
+                 id="fips",
                  bins=5,
                  year=2010,
                  detailed=FALSE,
                  class="sf",
                  ...){
-  if(!exists(".smoov_env")){
-    stop("smoov environment does not exist")
-  }
+  # Capture arguments
   arguments = list(...)
   
-  # Load shapefile and merge on data values
-  smoov_load(geo, data, value, year, detailed, class)
+  # Obtain smoov filepath and make sure environment is loaded
+  if(is.null(options("smoovpath"))){
+    smoovpath = file.path(find.package("smoov"), "smoov_mapfiles")
+  }else{
+    smoovpath = file.path(options("smoovpath")$smoovpath, "smoov_mapfiles")
+  }
+  envpath = file.path(smoovpath, "smoov_env.rds")
+  if(!exists(".smoov_env")){
+    if(!file.exists(envpath)){
+      stop("smoov environment not found in ", smoovpath, ". ",
+           "Try running `smoov_setup() first.")
+    }else{
+      # Load smoov environment
+      .smoov_env = readRDS(envpath)
+    }
+  }
+  
+  # Load shapefile and merge on data, and create base plot
+  return(smoov_plot(geo, data, value, year, detailed, class))
 }
+
+#TODO: create cache feature for when many plots are being made

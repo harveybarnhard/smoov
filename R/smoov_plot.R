@@ -1,6 +1,11 @@
 #' Helper function for `smoov()`
 
-smoov_load = function(geo, data, value, year, detailed, class){
+smoov_plot = function(geo, data, value, year, detailed, class){
+  if(is.logical(detailed)){
+    ifelse(detailed, detailed <- "detailed", detailed <- "coarse")
+  }
+  # Only consider non-NA values
+  value = value[!is.na(value)]
   # Allow for unconventional input for geo to work
   if(length(shape)==0){
     stop(paste0(geo, " is not a mappable geography with smoov."))
@@ -11,8 +16,8 @@ smoov_load = function(geo, data, value, year, detailed, class){
   shppath   = file.path(smoovpath,
                         paste0(paste(geo, year, detailed, class, sep="_"), ".rds"))
   if(!file.exists(shppath)){
-    stop(paste0(geo, " is not a mappable geography with smoov. ",
-                "Try other values for `year` `detailed` and `class`."))
+    stop(paste0("no file exists at ", shppath, 
+                " Try other values for `year` `detailed` and `class`."))
   }
   shp = readRDS(shppath)
   #TODO create subsetting here
@@ -26,12 +31,14 @@ smoov_load = function(geo, data, value, year, detailed, class){
   temp = merge(shp, data, by.x="fips", by.y=id, all.x=TRUE)
   
   if(class=="sf"){
-    g = ggplot(temp) + 
-      geom_sf(aes())
+    if(length(value)==0){
+      return(ggplot(temp) + geom_sf())
+    }else{
+      return(ggplot(temp) + geom_sf(aes(fill=value)))
+    }
   }else if(class=="sp"){
-    
+    #TODO perform case for sp
   }
-  return(g)
 }
 
 # do.call(`::`, list("smoov", "geo_table"))

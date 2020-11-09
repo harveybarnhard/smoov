@@ -8,6 +8,7 @@ smoov(
   geo,
   data,
   value = NA,
+  id,
   bins = 5,
   year = 2010,
   detailed = FALSE,
@@ -23,7 +24,11 @@ See details.}
 
 \item{value}{character; Name of the column in \code{data} with which a
 choropleth is created. If no column is provided, a map of boundaries
-is produced.}
+is produced. If more than one value is inputted, a facetted map is
+created.}
+
+\item{id}{character; Name of the column in \code{data} that provides the relevant
+geography identifier (e.g. FIPS code).}
 
 \item{bins}{integer; 5 by default.}
 
@@ -35,7 +40,7 @@ used when available. See details.}
 
 \item{class}{\code{"sp"} or \code{"sf"}; \code{"sf"} by default. See details.}
 
-\item{...}{Optional parameters depending on choice of \code{shape}. See details}
+\item{...}{Optional parameters depending on choice of \code{shape}. See details.}
 }
 \description{
 Simple mapping tool
