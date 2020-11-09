@@ -11,10 +11,10 @@ load_merge_tracts = function(cb, yr, cl, outname){
     coliter = c(coliter, "geometry")
   }
   for(i in 1:length(state.abb)){
-    tractmap = tigris::tracts(state=state.abb[i],
-                              cb=cb,
-                              year=yr,
-                              class=cl)[, coliter]
+    suppressMessages(tractmap <- tigris::tracts(state=state.abb[i],
+                                                cb=cb,
+                                                year=yr,
+                                                class=cl)[, coliter])
     # Concatenate local fips to create state-county-tract fips code
     if(cb){
       tractmap$fips = paste0(tractmap$STATE, tractmap$COUNTY, tractmap$TRACT)
@@ -34,39 +34,94 @@ load_merge_tracts = function(cb, yr, cl, outname){
     
     # Save into global environment
     if(i==1){
-      assign(outname, tractmap, envir=.GlobalEnv)
+      mastermap = tractmap
     }else{
-      assign(outname, rbind(get(outname), tractmap), envir=.GlobalEnv)
+      mastermap = rbind(mastermap, tractmap)
     }
   }
   
   # If class=="sp" then the file must be fortified into a data.frame format
   if(cl=="sp"){
-    suppressMessages(shp_map <- ggplot2::fortify(get(outname)))
-    shp_dt = get(outname)@data
+    suppressMessages(shp_map <- ggplot2::fortify(mastermap))
+    shp_dt = mastermap@data
     shp_dt$id = rownames(shp_dt)
     rownames(shp_dt) = c()
     shp_map = merge(shp_map, shp_dt, by="id", all.x=TRUE)
     shp_map$id = c()
-    assign(outname, shp_map, envir=.GlobalEnv)
+    mastermap = shp_map
     gc()
   }
+  return(mastermap)
 }
 
 # Function to load county maps =================================================
 load_counties = function(cb, yr, cl, outname){
-  #TODO rename and subset
   # Suppress warnings about CRS object 
   suppressWarnings(countymap <- tigris::counties(cb=cb, year=yr, class=cl))
-  assign(outname, countymap, envir=.GlobalEnv)
+  
+  # Concatenate local fips to create state-county fips code
+  countymap$fips = paste0(countymap$STATE, countymap$COUNTY)
+  if(cb){
+    countymap$fips = paste0(countymap$STATE, countymap$COUNTY)
+    if(yr==2000){
+      countymap = countymap[, c("AREA", "fips")]
+    }else if(yr==2010){
+      countymap = countymap[, c("CENSUSAREA", "fips")]
+    }
+  }
+  
+  # Rename columns
+  if(cl=="sf"){
+    colnames(countymap) = c("area", "fips", "geometry")
+  }else if(cl=="sp"){
+    colnames(countymap@data) = c("area", "fips")
+  }
+  
+  
+  # If class=="sp" then the file must be fortified into a data.frame format
+  if(cl=="sp"){
+    suppressMessages(shp_map <- ggplot2::fortify(countymap))
+    shp_dt = countymap@data
+    shp_dt$id = rownames(shp_dt)
+    rownames(shp_dt) = c()
+    shp_map = merge(shp_map, shp_dt, by="id", all.x=TRUE)
+    shp_map$id = c()
+  }
+  return(countymap)
 }
 
 # Function to load state maps ==================================================
 load_states = function(cb, yr, cl, outname){
-  # TODO rename and subset
   # suppress warnings about CRS object
   suppressWarnings(statemap <- tigris::states(cb=cb, year=yr, class=cl))
-  assign(outname, statemap, envir=.GlobalEnv)
+  
+  # Concatenate local fips to create state-county-tract fips code
+  statemap$fips = statemap$STATE
+  if(cb){
+    if(yr==2000){
+      statemap = statemap[, c("AREA", "fips")]
+    }else if(yr==2010){
+      statemap = statemap[, c("CENSUSAREA", "fips")]
+    }
+  }
+  
+  # Rename columns
+  if(cl=="sf"){
+    colnames(statemap) = c("area", "fips", "geometry")
+  }else if(cl=="sp"){
+    colnames(statemap@data) = c("area", "fips")
+  }
+  
+  # If class=="sp" then the file must be fortified into a data.frame format
+  if(cl=="sp"){
+    suppressMessages(shp_map <- ggplot2::fortify(statemap))
+    shp_dt = statemap@data
+    shp_dt$id = rownames(shp_dt)
+    rownames(shp_dt) = c()
+    shp_map = merge(shp_map, shp_dt, by="id", all.x=TRUE)
+    shp_map$id = c()
+  }
+  return(statemap)
 }
 
 # Wrapper for state and county loading =========================================
@@ -87,15 +142,13 @@ geo_loader = function(vec, outpath){
       warning(outname, " already exists in ", outpath) 
     }else{
       if(geo=="tracts"){
-        load_merge_tracts(cb, yr, cl, outname)
+        geomap = load_merge_tracts(cb, yr, cl, outname)
       }else if(geo=="counties"){
-        load_counties(cb, yr, cl, outname)
+        geomap = load_counties(cb, yr, cl, outname)
       }else if(geo=="states"){
-        load_states(cb, yr, cl, outname)
+        geomap = load_states(cb, yr, cl, outname)
       }
-      saveRDS(get(outname), file=filepath)
-      rm(outname)
-      gc()
+      saveRDS(geomap, file=filepath)
     }
   }, error = function(cond){
     # Handle Errors by skipping over any shapefiles that produce error

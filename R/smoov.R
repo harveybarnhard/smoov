@@ -26,10 +26,13 @@
 #'     `"sp"` or `"sf"`; `"sf"` by default. See details.
 #' @param ...
 #'     Optional parameters depending on choice of `shape`. See details.
+#' @return 
+#'     Output will be a `ggplot` base layer onto which any `ggplot` layer may
+#'     be added. 
 #' @export
 
 smoov = function(geo,
-                 data,
+                 data=NULL,
                  value=NA,
                  id="fips",
                  bins=5,
@@ -57,8 +60,15 @@ smoov = function(geo,
     }
   }
   
-  # Load shapefile and merge on data, and create base plot
-  return(smoov_plot(geo, data, value, year, detailed, class))
+  # Handle input
+  # Allow for unconventional input for geo to work
+  shape = smoov::geo_alias[geo_alias$alias==geo,]$name
+  if(length(shape)==0){
+    stop(paste0(geo, " is not a mappable geography with smoov."))
+  }
+  
+  # Load shapefile, merge on data, and create base plot
+  return(smoov_plot(geo=shape, data, value, year, detailed, class))
 }
 
 #TODO: create cache feature for when many plots are being made

@@ -2,7 +2,6 @@
 
 # Load county, tract, and state shapefiles
 create_mapfiles = function(us_geos){
-  objects_in_memory = ls(envir=.GlobalEnv)
   # Load us tract, county, and state geographies ===============================
   if(us_geos==TRUE){
     # Load state abbreviations, adding DC
@@ -44,5 +43,4 @@ create_mapfiles = function(us_geos){
   # if(sch_districts==TRUE){
   #   
   # }
-  rm(list=setdiff(ls(envir=.GlobalEnv), objects_in_memory))
 }
