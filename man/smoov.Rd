@@ -6,9 +6,9 @@
 \usage{
 smoov(
   geo,
-  data,
+  data = NULL,
   value = NA,
-  id,
+  id = "fips",
   bins = 5,
   year = 2010,
   detailed = FALSE,
@@ -27,7 +27,8 @@ choropleth is created. If no column is provided, a map of boundaries
 is produced. If more than one value is inputted, a facetted map is
 created.}
 
-\item{id}{character; Name of the column in \code{data} that provides the relevant
+\item{id}{character; "fips" by default.
+Name of the column in \code{data} that provides the relevant
 geography identifier (e.g. FIPS code).}
 
 \item{bins}{integer; 5 by default.}
@@ -41,6 +42,11 @@ used when available. See details.}
 \item{class}{\code{"sp"} or \code{"sf"}; \code{"sf"} by default. See details.}
 
 \item{...}{Optional parameters depending on choice of \code{shape}. See details.}
+}
+\value{
+\preformatted{Output will be a `ggplot` base layer onto which any `ggplot` layer may
+be added. 
+}
 }
 \description{
 Simple mapping tool

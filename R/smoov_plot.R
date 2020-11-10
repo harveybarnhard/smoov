@@ -18,31 +18,73 @@ smoov_plot = function(geo, data, value, year, detailed, class){
   }
   shp = readRDS(shppath)
   
-  # Subsetting
-  #TODO create subsetting here
-  shp = shp[substr(shp$fips, 1, 2)=="01",]
-  data = data.frame(shp)
-  data = data[, c(id, value)]
-  
-  # Merge data onto shapefile if data nad values provided
+  # Merge data onto shapefile if data and values provided
   if(!is.null(data) & length(value)>0){
     if(!value%in%colnames(data)){
       stop(paste0(value, " is not the name of a column in provided data."))
     }
-    temp = merge(shp, data, by.x="fips", by.y=id, all.x=TRUE)
+    data = data[, c(id, value)]
+    shp = merge(shp, data, by.x="fips", by.y=id, all.x=TRUE)
   }
   
+  # Move Hawaii and Alaska
+  # https://www.r-spatial.org/r/2018/10/25/ggplot2-sf-3.html
   if(class=="sf"){
-    if(length(value)==0){
-      return(ggplot2::ggplot(temp) + 
-               ggplot2::geom_sf())
+    if(length(value)==0 & is.null(data)){
+      g = ggplot2::ggplot(shp) +
+        ggplot2::geom_sf() +
+        ggplot2::coord_sf(crs=sf::st_crs(2163),
+                          xlim=c(-2500000, 2500000),
+                          ylim=c(-2300000, 730000))
+      alaska = ggplot2::ggplot(shp) +
+        ggplot2::geom_sf() +
+        ggplot2::coord_sf(crs=sf::st_crs(3467),
+                          xlim=c(-2400000, 1600000),
+                          ylim=c(-200000, 2500000),
+                          expand=FALSE, datum=NA) +
+        theme_void()
+      hawaii = ggplot2::ggplot(shp) +
+        ggplot2::geom_sf() +
+        ggplot2::coord_sf(crs=sf::st_crs(4135),
+                          xlim=c(-161, -154),
+                          ylim=c(18, 23),
+                          expand=FALSE, datum=NA) +
+        theme_void()
     }else{
-      return(ggplot2::ggplot(temp) +
-               ggplot::geom_sf(aes(fill=value)))
+      return(
+        ggplot2::ggplot(shp) + ggplot2::geom_sf(aes(fill=value))
+      )
     }
+    return(
+      g +
+        annotation_custom(
+          grob = ggplotGrob(alaska),
+          xmin = -2750000,
+          xmax = -2750000 + (1600000 - (-2400000))/2.5,
+          ymin = -2450000,
+          ymax = -2450000 + (2500000 - 200000)/2.5
+        ) +
+        annotation_custom(
+          grob = ggplotGrob(hawaii),
+          xmin = -1250000,
+          xmax = -1250000 + (-154 - (-161))*120000,
+          ymin = -2450000,
+          ymax = -2450000 + (23 - 18)*120000
+        ) +
+        theme_void()
+    )
   }else if(class=="sp"){
-    #TODO perform case for sp
+    if(length(value)==0 & is.null(data)){
+      return(ggplot2::ggplot(shp, mapping=aes(x=long,
+                                              y=lat,
+                                              group=group)) +
+               ggplot2::geom_polygon())
+    }else{
+      return(ggplot2::ggplot(shp, mapping=aes(x=long,
+                                              y=lat,
+                                              group=group,
+                                              fill=value)) +
+               ggplot2::geom_polygon())
+    }
   }
 }
-
-# do.call(`::`, list("smoov", "geo_table"))
