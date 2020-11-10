@@ -51,9 +51,25 @@ smoov_plot = function(geo, data, value, year, detailed, class){
                           expand=FALSE, datum=NA) +
         theme_void()
     }else{
-      return(
-        ggplot2::ggplot(shp) + ggplot2::geom_sf(aes(fill=value))
-      )
+      g = ggplot2::ggplot(shp) +
+        ggplot2::geom_sf(aes(fill=value)) +
+        ggplot2::coord_sf(crs=sf::st_crs(2163),
+                          xlim=c(-2500000, 2500000),
+                          ylim=c(-2300000, 730000))
+      alaska = ggplot2::ggplot(shp[substr(shp$fips,1,2)=="02"]) +
+        ggplot2::geom_sf(aes(fill=value)) +
+        ggplot2::coord_sf(crs=sf::st_crs(3467),
+                          xlim=c(-2400000, 1600000),
+                          ylim=c(-200000, 2500000),
+                          expand=FALSE, datum=NA) +
+        theme_void()
+      hawaii = ggplot2::ggplot(shp[substr(shp$fips,1,2)=="15"]) +
+        ggplot2::geom_sf(aes(fill=value)) +
+        ggplot2::coord_sf(crs=sf::st_crs(4135),
+                          xlim=c(-161, -154),
+                          ylim=c(18, 23),
+                          expand=FALSE, datum=NA) +
+        theme_void()
     }
     return(
       g +
