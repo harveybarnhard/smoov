@@ -4,7 +4,17 @@
 \alias{smoov_plot}
 \title{Helper function for \code{smoov()}}
 \usage{
-smoov_plot(geo, data, value, year, detailed, class)
+smoov_plot(
+  geo,
+  data,
+  value,
+  year,
+  detailed,
+  class,
+  states = NULL,
+  tracts = NULL,
+  counties = NULL
+)
 }
 \description{
 Helper function for \code{smoov()}

@@ -37,9 +37,11 @@ smoov_setup = function(load_mapfiles=FALSE,
     assign("smoovpath", smoovpath, envir=.smoov_env)
     # TODO add default theme to environment
     saveRDS(.smoov_env, envpath)
+    message("smoov enivronment created")
   }else{
     # Load smoov environment
-    .smoov_env = readRDS(envpath)
+    .smoov_env <<- readRDS(envpath)
+    message("smoov enivronment loaded")
   }
   
   # Load mapfiles, ignoring mapfiles that have not already been loaded

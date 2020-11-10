@@ -33,7 +33,7 @@
 
 smoov = function(geo,
                  data=NULL,
-                 value=NA,
+                 value=NULL,
                  id="fips",
                  bins=5,
                  year=2010,
@@ -41,7 +41,7 @@ smoov = function(geo,
                  class="sf",
                  ...){
   # Capture arguments
-  arguments = list(...)
+  #arguments = list(...)
   
   # Obtain smoov filepath and make sure environment is loaded
   if(is.null(options("smoovpath"))){
@@ -68,7 +68,7 @@ smoov = function(geo,
   }
   
   # Load shapefile, merge on data, and create base plot
-  return(smoov_plot(geo=shape, data, value, year, detailed, class))
+  return(smoov_plot(geo=shape, data, value, year, detailed, class, ...))
 }
 
 #TODO: create cache feature for when many plots are being made
