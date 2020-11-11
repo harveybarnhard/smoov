@@ -1,4 +1,13 @@
 #' Helper function for smoov_plot()
+#' This function takes in fips codes for states, counties, and tracts
+#' and returns a list of state fips codes
+find_states = function(states, counties, tracts){
+  
+}
+
+
+
+#' Helper function for smoov_plot()
 #' This function takes in map data and the dataframe of values, merging them
 #' together when appropriate. This function also performs the subsetting 
 #' operations if subsetting parameters (states, counties, tracts) are supplied.
