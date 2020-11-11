@@ -6,14 +6,29 @@ standardize_geo = function(state=NULL, county=NULL, tract=NULL){
   tract = as.character(tract)
   
   if(state!=NULL){
-    if(!all(sapply(state, nchar, USE.NAMES=FALSE)==2)){
+    if(is.numeric(state)){
+      state = sprintf("%02d", state)
+    }
+    else if(all(nchar(state))%in%c(1,2))){
+      state = sprintf("%02d", as.numeric(state))
+    }else{
       # TODO: lookup table for state
     }
   }
   if(county!=NULL){
-    
+    if(all(nchar(state.name))==3)){
+      
+    }else if(all(nchar(state.name))==5){
+      
+    }else{
+      # TODO: lookup table for state
+    }
   }
   if(tract!=NULL){
-    
+    if(any(nchar(tract)!=6)){
+      stop("Only 6-digit tract codes accepted as input.")
+    }else if(is.numeric(tract)){
+      tract = as.character(tract)
+    }
   }
 }
