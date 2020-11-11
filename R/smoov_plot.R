@@ -6,9 +6,7 @@ smoov_plot = function(geo,
                       year,
                       detailed,
                       class,
-                      states=NULL,
-                      tracts=NULL,
-                      counties=NULL){
+                      subsetfips=NULL){
   if(is.logical(detailed)){
     ifelse(detailed, detailed <- "detailed", detailed <- "coarse")
   }
@@ -24,7 +22,7 @@ smoov_plot = function(geo,
   }
   shp <- readRDS(shppath)
   
-  outlist = shp_data_merge(shp, data, id, value, states, tracts, counties)
+  outlist = shp_data_merge(shp, data, id, value, subsetfips)
   shp <- outlist[[1]]
   subset_logic = outlist[[2]]
   

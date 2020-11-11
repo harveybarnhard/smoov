@@ -39,11 +39,11 @@ smoov = function(geo,
                  year=2010,
                  detailed=FALSE,
                  class="sf",
-                 ...){
-  # Capture arguments
-  #arguments = list(...)
+                 states=NULL,
+                 counties=NULL,
+                 tracts=NULL){
   
-  # Obtain smoov filepath and make sure environment is loaded
+  # Obtain smoov filepath and make sure environment is loaded ==================
   if(is.null(options("smoovpath"))){
     smoovpath = file.path(find.package("smoov"), "smoov_mapfiles")
   }else{
@@ -60,15 +60,17 @@ smoov = function(geo,
     }
   }
   
-  # Handle input
-  # Allow for unconventional input for geo to work
+  # Handle input ===============================================================
+  # Allow for unconventional input of geo to work
   shape = smoov::geo_alias[geo_alias$alias==geo,]$name
   if(length(shape)==0){
     stop(paste0(geo, " is not a mappable geography with smoov."))
   }
   
+  # Convert subset codes to standardized fips codes
+  subfips = standardize_geo(state=states, county=counties, tract=tracts)
   # Load shapefile, merge on data, and create base plot
-  return(smoov_plot(geo=shape, data, value, year, detailed, class, ...))
+  return(smoov_plot(geo=shape, data, value, year, detailed, class, subfips))
 }
 
 #TODO: create cache feature for when many plots are being made
