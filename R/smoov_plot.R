@@ -47,11 +47,15 @@ smoov_plot = function(geo,
         g = g + usa_coord
       }
       if(subset_logic[2]){
-        alaska = ggplot2::ggplot(shp) + ggplot2::geom_sf() + alaska_coord +
+        alaska = ggplot2::ggplot(shp) +
+          ggplot2::geom_sf() +
+          alaska_coord +
           ggplot2::theme_void()
       }
       if(subset_logic[3]){
-        hawaii = ggplot2::ggplot(shp) + ggplot2::geom_sf() + hawaii_coord +
+        hawaii = ggplot2::ggplot(shp) +
+          ggplot2::geom_sf() +
+          hawaii_coord +
           ggplot2::theme_void()
       }
     }else{
@@ -88,28 +92,12 @@ smoov_plot = function(geo,
       )
     }else if(subset_logic[2]){
       return(
-        g +
-          ggplot2::annotation_custom(
-            grob = ggplot2::ggplotGrob(alaska),
-            xmin = -2750000,
-            xmax = -2750000 + (1600000 - (-2400000))/2.5,
-            ymin = -2450000,
-            ymax = -2450000 + (2500000 - 200000)/2.5
-          ) +
-          ggplot2::theme_void()
+        alaska
       )
     }
     else if(subset_logic[3]){
       return(
-        g +
-          ggplot2::annotation_custom(
-            grob = ggplot2::ggplotGrob(hawaii),
-            xmin = -1250000,
-            xmax = -1250000 + (-154 - (-161))*120000,
-            ymin = -2450000,
-            ymax = -2450000 + (23 - 18)*120000
-          ) +
-          ggplot2::theme_void()
+        hawaii
       )
     }else{
       return(g + ggplot2::theme_void())
