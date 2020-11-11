@@ -13,11 +13,11 @@ shp_data_merge = function(shp,
                           subfips=NULL){
   
   # Perform subsetting operations on shp =======================================
-  if(nchar(subfips[1])>nchar(shp$fips[1])){
-    stop("You tried to subset to a finer level of geography than provided by ",
-         "`geo`")
-  }
   if(!is.null(subfips)){
+    if(nchar(subfips[1])>nchar(shp$fips[1])){
+      stop("You tried to subset to a finer level of geography than provided by ",
+           "`geo`")
+    }
     shp = shp[.Internal(substr(shp$fips, 1L, as.integer(nchar(subfips[1]))))%in%subfips,]
     unqstates = unique(.Internal(substr(subfips, 1L, 2L)))
   }else{

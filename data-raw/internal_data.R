@@ -14,10 +14,6 @@ geo_alias = data.frame(
             "tract")
 )
 
-state_alias = data.frame(
-  name = c()
-)
-
 usethis::use_data(
   geo_alias,
   internal=TRUE,

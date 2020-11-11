@@ -62,7 +62,7 @@ smoov = function(geo,
   
   # Handle input ===============================================================
   # Allow for unconventional input of geo to work
-  shape = smoov::geo_alias[geo_alias$alias==geo,]$name
+  shape = geo_alias[geo_alias$alias==geo,]$name
   if(length(shape)==0){
     stop(paste0(geo, " is not a mappable geography with smoov."))
   }
