@@ -1,13 +1,4 @@
 #' Helper function for smoov_plot()
-#' This function takes in fips codes for states, counties, and tracts
-#' and returns a list of state fips codes
-find_states = function(states, counties, tracts){
-  
-}
-
-
-
-#' Helper function for smoov_plot()
 #' This function takes in map data and the dataframe of values, merging them
 #' together when appropriate. This function also performs the subsetting 
 #' operations if subsetting parameters (states, counties, tracts) are supplied.
@@ -25,15 +16,15 @@ shp_data_merge = function(shp,
   # Perform subsetting operations on shp
   unqstates = c()
   if(!is.null(states)){
-    if(all(sapply(states, nchar, USE.NAMES=FALSE)==2)){
+    if(all(nchar(states)==2)){
       unqstates = states
-      shp = shp[substr(shp$fips, 1, 2) %in% states,]
+      shp = shp[.Internal(substr(shp$fips, 1L, 2L)) %in% states,]
     }else{
       stop("Improper input for `tracts`. Check string lengths")
     }
   }
   if(!is.null(counties)){
-    if(all(sapply(counties, nchar, USE.NAMES=FALSE)==3)){
+    if(all(nchar(counties)==3)){
       if(is.null(states)){
         stop("Must provide vector of states corresponding to vector ",
              "of counties when providing 3-digit county codes. Try ",
@@ -45,28 +36,26 @@ shp_data_merge = function(shp,
        stop("3-digit county codes provided without corresponding vector ",
             "of 2-digit state codes.") 
       }
-    }else if(all(sapply(counties, nchar, USE.NAMES=FALSE)!=5)){
+    }else if(all(nchar(counties)!=5)){
       stop("Improper input for `counties`. Check string lengths.")
     }
-    unqstates = union(unqstates, substr(counties, 1, 2))
-    shp = shp[substr(shp$fips, 1, 5) %in% counties,]
+    unqstates = union(unqstates, .Internal(substr(counties, 1L, 2L)))
+    shp = shp[.Internal(substr(shp$fips, as.integer(1), as.integer(5))) %in% counties,]
   }
   if(!is.null(counties)){
-    if(all(sapply(tracts, nchar, USE.NAMES=FALSE)==6)){
+    if(all(nchar(tracts)==6)){
       if(is.null(states) & is.null(counties)){
         stop("Must provide vector of states and counties corresponding to ",
              "vector of tracts when providing 6-digit tracts codes. Try ",
              "using 11 digit tracts codes instead.")
-      }else if(is.null(states) &
-               all(sapply(counties, nchar, USE.NAMES=FALSE)==5)){
+      }else if(is.null(states) & all(nchar(counties)==5)){
         if(length(counties)==length(tracts) | length(counties)==1){
           tracts = paste0(counties, tracts)
         }else{
           stop("6-digit tract codes and 5-digit county codes provided, ",
                "but vectors are of different lengths.")
         }
-      }else if(all(sapply(states, nchar, USE.NAMES=FALSE)==2) &
-               all(sapply(counties, nchar, USE.NAMES=FALSE)==3)){
+      }else if(all(nchar(states)==2) & all(nchar(counties)==3)){
         if(length(states)==length(counties) & length(counties)==length(tracts)){
           tracts = paste0(states, counties, tracts)
         }else{
@@ -75,8 +64,8 @@ shp_data_merge = function(shp,
         }
       }
     }
-    unqstates = union(unqstates, substr(tracts, 1, 2))
-    shp = shp[substr(shp$fips, 1, 11) %in% tracts,]
+    unqstates = union(unqstates, .Internal(substr(tracts, 1L, 2L)))
+    shp = shp[.Internal(substr(shp$fips, 1L, 11L)) %in% tracts,]
   }
   
   # Create logical return values for Hawaii and Alaska
@@ -119,21 +108,21 @@ shp_data_merge = function(shp,
   # TODO: Create look up table for non-fips (e.g. state-name entries)
   data = data[, c(id, value)]
   if(!is.null(states)){
-    if(all(sapply(states, nchar, USE.NAMES=FALSE)==2)){
-      data = data[substr(data$id, 1, 2) %in% states,]
+    if(all(nchar(states))==2)){
+      data = data[.Internal(substr(data$id, 1L, 2L)) %in% states,]
     }
   }
   if(!is.null(counties)){
-    if(all(sapply(counties, nchar, USE.NAMES=FALSE)==3)){
+    if(all(nchar(counties)==3)){
       counties = paste0(states, counties)
     }
-    data = data[substr(data$id, 1, 5) %in% counties,]
+    data = data[.Internal(substr(data$id, 1L, 5L)) %in% counties,]
   }
   if(!is.null(counties)){
-    if(all(sapply(tracts, nchar, USE.NAMES=FALSE)==6)){
+    if(all(nchar(tracts)==6)){
       tracts = paste0(states, counties, tracts)
     }
-    data = data[substr(data$id, 1, 11) %in% tracts,]
+    data = data[.Internal(substr(data$id, 1L, 11L)) %in% tracts,]
   }
   
   # Final step, merge subsetted map and data together
