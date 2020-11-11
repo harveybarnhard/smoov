@@ -56,7 +56,7 @@ smoov = function(geo,
            "Try running `smoov_setup() first.")
     }else{
       # Load smoov environment
-      .smoov_env = readRDS(envpath)
+      .smoov_env <<- readRDS(envpath)
     }
   }
   
