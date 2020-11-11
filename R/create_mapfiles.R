@@ -17,7 +17,7 @@ create_mapfiles = function(us_geos){
     target$outname = paste(target$geo,
                            target$yr,
                            target$cb,
-                           target$cl,
+                           target$class,
                            sep="_")
     
     # Remove detailed county maps
