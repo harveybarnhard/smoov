@@ -71,8 +71,11 @@ shp_data_merge = function(shp,
   }
   
   # Create logical return values for Hawaii and Alaska
-  alaska = "02"%in%unqstates
-  hawaii = "15"%in%unqstates
+  if(length(unqstates)>0){
+    alaska = "02"%in%unqstates; hawaii = "15"%in%unqstates
+  }else{
+    alaska = TRUE; hawaii = TRUE
+  }
   
   # Should all of USA be plotted?
   #    TRUE if both Alaska and Hawaii are plotted
@@ -80,7 +83,9 @@ shp_data_merge = function(shp,
   #         mainland state
   #    FALSE otherwise (e.g. one of Alaska or Hawaii, or mainland states)
   usa = ifelse(alaska&hawaii, TRUE,
-               ifelse((alaska|hawaii)&length(setdiff(unqstates, c("02", "15")))>0,
+               ifelse((alaska|hawaii) & 
+                      (length(setdiff(unqstates, c("02", "15")))>0 |
+                      length(unqstates)==0),
                       TRUE, FALSE))
   
   # If no data is provided, then map of USA is created
@@ -98,6 +103,7 @@ shp_data_merge = function(shp,
     stop(value, " is not a name of a column in the data supplied.")
   }
   
+  # TODO make this subsetting faster by using above subsets
   
   # Perform subsetting operations, allowing for flexible input base on FIPs
   # right now

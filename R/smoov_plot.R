@@ -48,11 +48,11 @@ smoov_plot = function(geo,
       }
       if(subset_logic[2]){
         alaska = ggplot2::ggplot(shp) + ggplot2::geom_sf() + alaska_coord +
-          theme_void()
+          ggplot2::theme_void()
       }
       if(subset_logic[3]){
         hawaii = ggplot2::ggplot(shp) + ggplot2::geom_sf() + hawaii_coord +
-          theme_void()
+          ggplot2::theme_void()
       }
     }else{
       g = ggplot2::ggplot(shp) +
@@ -61,59 +61,58 @@ smoov_plot = function(geo,
       alaska = ggplot2::ggplot(shp[substr(shp$fips,1,2)=="02"]) +
         ggplot2::geom_sf(aes(fill=value)) +
         alaska_coord +
-        theme_void()
+        ggplot2::theme_void()
       hawaii = ggplot2::ggplot(shp[substr(shp$fips,1,2)=="15"]) +
         ggplot2::geom_sf(aes(fill=value)) +
         hawaii_coord +
-        theme_void()
+        ggplot2::theme_void()
     }
     if(subset_logic[2] & subset_logic[3]){
       return(
         g +
-          annotation_custom(
-            grob = ggplotGrob(alaska),
+          ggplot2::annotation_custom(
+            grob = ggplot2::ggplotGrob(alaska),
             xmin = -2750000,
             xmax = -2750000 + (1600000 - (-2400000))/2.5,
             ymin = -2450000,
             ymax = -2450000 + (2500000 - 200000)/2.5
           ) +
-          annotation_custom(
-            grob = ggplotGrob(hawaii),
+          ggplot2::annotation_custom(
+            grob = ggplot2::ggplotGrob(hawaii),
             xmin = -1250000,
             xmax = -1250000 + (-154 - (-161))*120000,
             ymin = -2450000,
             ymax = -2450000 + (23 - 18)*120000
           ) +
-          theme_void()
+          ggplot2::theme_void()
       )
     }else if(subset_logic[2]){
       return(
-        # TODO fix if just plotting Hawaii
         g +
-          annotation_custom(
-            grob = ggplotGrob(alaska),
+          ggplot2::annotation_custom(
+            grob = ggplot2::ggplotGrob(alaska),
             xmin = -2750000,
             xmax = -2750000 + (1600000 - (-2400000))/2.5,
             ymin = -2450000,
             ymax = -2450000 + (2500000 - 200000)/2.5
           ) +
-          theme_void()
+          ggplot2::theme_void()
       )
     }
     else if(subset_logic[3]){
       return(
         g +
-          annotation_custom(
-            grob = ggplotGrob(hawaii),
+          ggplot2::annotation_custom(
+            grob = ggplot2::ggplotGrob(hawaii),
             xmin = -1250000,
             xmax = -1250000 + (-154 - (-161))*120000,
             ymin = -2450000,
             ymax = -2450000 + (23 - 18)*120000
           ) +
-          theme_void()
+          ggplot2::theme_void()
       )
     }else{
-      return(g + theme_void())
+      return(g + ggplot2::theme_void())
     }
   }else if(class=="sp"){
     if(length(value)==0 & is.null(data)){
