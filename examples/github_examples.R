@@ -8,9 +8,11 @@ library(jsonlite)
 
 
 # Plot all US counties
+data(county_commute_types)
 smoov("counties")
 
 # Plot Chicago surroundings
+data(tracts_commute_types)
 smoov(geo="tracts", states=17, counties=c(31,43))
 
 # Plot Chicago surroundings + formatted title

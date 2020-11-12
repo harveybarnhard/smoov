@@ -67,20 +67,20 @@ shp_data_merge = function(shp,
   
   if(!is.null(states)){
     if(all(nchar(states)==2)){
-      data = data[.Internal(substr(data$id, 1L, 2L)) %in% states,]
+      data = data[.Internal(substr(data[,id], 1L, 2L)) %in% states,]
     }
   }
   if(!is.null(counties)){
     if(all(nchar(counties)==3)){
       counties = paste0(states, counties)
     }
-    data = data[.Internal(substr(data$id, 1L, 5L)) %in% counties,]
+    data = data[.Internal(substr(data[,id], 1L, 5L)) %in% counties,]
   }
   if(!is.null(counties)){
     if(all(nchar(tracts)==6)){
       tracts = paste0(states, counties, tracts)
     }
-    data = data[.Internal(substr(data$id, 1L, 11L)) %in% tracts,]
+    data = data[.Internal(substr(data[,id], 1L, 11L)) %in% tracts,]
   }
   
   # Final step, merge subsetted map and data together
