@@ -44,46 +44,41 @@ smoov_plot = function(geo,
     
     # Determine whether to fill in value or just draw borders
     if(is.null(value) & is.null(data)){
-      fill_layer = ggplot2::geom_sf()
+      basemap = ggplot2::ggplot(shp) +
+        ggplot2::geom_sf() +
+        ggplot2::theme_void()
     }else{
-      fill_layer = ggplot2::geom_sf(ggplot2::aes(fill=get(value)), size=.1)
+      midpoint = quantile(subset(data, select=value), na.rm=TRUE, probs=0.5)
+      basemap = ggplot2::ggplot(shp) +
+        ggplot2::geom_sf(ggplot2::aes(fill=get(value)), size=.01) +
+        ggplot2::scale_fill_gradient2(name=value,
+                                      low = "darkred",
+                                      mid = "white",
+                                      high = "blue",
+                                      midpoint=midpoint) +
+        ggplot2::theme_void()
     }
     
     # Use different zoom levels depending on subsetting
     # TODO: subset in shp_data_merge set for HI and AK
     
-    # All US states
-    if(subset_logic[1]){
-      basemap = ggplot2::ggplot(shp) +
-        fill_layer +
-        usa_coord +
-        ggplot2::theme_void()
-    }else{
-      basemap = ggplot2::ggplot(shp) +
-        fill_layer +
-        ggplot2::theme_void()
-    }
-    
     # Alaska
     if(subset_logic[2]){
-      alaska = ggplot2::ggplot(shp) +
-        fill_layer +
-        alaska_coord +
-        ggplot2::theme_void()
+      alaska = basemap + alaska_coord
     }else if(subset_logic[1]){
-      alaska = ggplot2::ggplot() +
-        ggplot2::theme_void()
+      alaska = ggplot2::ggplot() + ggplot2::theme_void()
     }
     
     # Hawaii
     if(subset_logic[3]){
-      hawaii = ggplot2::ggplot(shp) +
-        fill_layer +
-        hawaii_coord +
-        ggplot2::theme_void()
+      hawaii = basemap + hawaii_coord
     }else if(subset_logic[1]){
-      hawaii = ggplot2::ggplot() +
-        ggplot2::theme_void()
+      hawaii = ggplot2::ggplot() + ggplot2::theme_void()
+    }
+    
+    # All US states
+    if(subset_logic[1]){
+      basemap = basemap + usa_coord
     }
     
     # Return ggplot2 object based on subset logic
@@ -99,11 +94,9 @@ smoov_plot = function(geo,
     
     if(subset_logic[1]){
       alaska = alaska +
-        ggplot2::theme(legend.position="none") +
-        ggplot2::scale_fill_gradientn(name=value, colours = terrain.colors(10))
+        ggplot2::theme(legend.position="none")
       hawaii = hawaii +
-        ggplot2::theme(legend.position="none") +
-        ggplot2::scale_fill_gradientn(name=value, colours = terrain.colors(10))
+        ggplot2::theme(legend.position="none")
       return(
         basemap + 
           ggplot2::annotation_custom(
@@ -120,10 +113,8 @@ smoov_plot = function(geo,
             ymin = -2450000,
             ymax = -2450000 + (23 - 18)*120000
           ) +
-          ggplot2::theme_void() +
           ggplot2::theme(legend.position=c(0.05,1),
-                         legend.justification=c(0.05,1)) +
-          scale_fill_gradientn(name=value, colours = terrain.colors(10))
+                         legend.justification=c(0.05, 0.95))
       )
     }else{
       return(basemap)
