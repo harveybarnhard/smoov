@@ -3,6 +3,7 @@
 smoov_plot = function(geo,
                       data,
                       value=NULL,
+                      id,
                       year,
                       detailed,
                       class,
@@ -45,7 +46,7 @@ smoov_plot = function(geo,
     if(is.null(value) & is.null(data)){
       fill_layer = ggplot2::geom_sf()
     }else{
-      fill_layer = ggplot2::geom_sf(aes(fill=value))
+      fill_layer = ggplot2::geom_sf(ggplot2::aes(fill=get(value)), size=.1)
     }
     
     # Use different zoom levels depending on subsetting
@@ -97,6 +98,12 @@ smoov_plot = function(geo,
     }
     
     if(subset_logic[1]){
+      alaska = alaska +
+        ggplot2::theme(legend.position="none") +
+        ggplot2::scale_fill_gradientn(name=value, colours = terrain.colors(10))
+      hawaii = hawaii +
+        ggplot2::theme(legend.position="none") +
+        ggplot2::scale_fill_gradientn(name=value, colours = terrain.colors(10))
       return(
         basemap + 
           ggplot2::annotation_custom(
@@ -113,7 +120,10 @@ smoov_plot = function(geo,
             ymin = -2450000,
             ymax = -2450000 + (23 - 18)*120000
           ) +
-          ggplot2::theme_void()
+          ggplot2::theme_void() +
+          ggplot2::theme(legend.position=c(0.05,1),
+                         legend.justification=c(0.05,1)) +
+          scale_fill_gradientn(name=value, colours = terrain.colors(10))
       )
     }else{
       return(basemap)
@@ -128,7 +138,7 @@ smoov_plot = function(geo,
       return(ggplot2::ggplot(shp, mapping=aes(x=long,
                                               y=lat,
                                               group=group,
-                                              fill=value)) +
+                                              fill=get(value))) +
                ggplot2::geom_polygon())
     }
   }

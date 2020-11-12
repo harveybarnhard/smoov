@@ -2,7 +2,9 @@
 #' counties, and tracts, and outputs an vector equal to the length of each
 #' input vector, or the length of the smallest geography vector if only
 #' one of each of the larger geographies is provided.
-standardize_geo = function(state=NULL, county=NULL, tract=NULL){
+#' 
+#' @export
+create_fips = function(state=NULL, county=NULL, tract=NULL){
   if(!is.null(state)){
     if(is.numeric(state)){
       fips = sprintf("%02d", state)
@@ -55,6 +57,7 @@ standardize_geo = function(state=NULL, county=NULL, tract=NULL){
     
     # Make sure tract codes are appropriate length
     if(any(nchar(tract)!=6)){
+      stringr::str_pad(tract, 5, side="right", pad= "0")
       stop("Only 6-digit tract codes accepted as input")
     }else if(is.numeric(tract)){
       tract = as.character(tract)

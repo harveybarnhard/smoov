@@ -62,25 +62,8 @@ shp_data_merge = function(shp,
   # Perform subsetting operations, allowing for flexible input base on FIPs
   # right now
   # TODO: Create look up table for non-fips (e.g. state-name entries)
-  data = data[, c(id, value)]
-  data = data[.Internal(substr(shp$fips, 1L, as.integer(nchar(subfips[1])))),]
-  
-  if(!is.null(states)){
-    if(all(nchar(states)==2)){
-      data = data[.Internal(substr(data[,id], 1L, 2L)) %in% states,]
-    }
-  }
-  if(!is.null(counties)){
-    if(all(nchar(counties)==3)){
-      counties = paste0(states, counties)
-    }
-    data = data[.Internal(substr(data[,id], 1L, 5L)) %in% counties,]
-  }
-  if(!is.null(counties)){
-    if(all(nchar(tracts)==6)){
-      tracts = paste0(states, counties, tracts)
-    }
-    data = data[.Internal(substr(data[,id], 1L, 11L)) %in% tracts,]
+  if(length(subfips)>0){
+    data = data[.Internal(substr(data$fips, 1L, as.integer(nchar(subfips[1]))))%in%subfips,]
   }
   
   # Final step, merge subsetted map and data together

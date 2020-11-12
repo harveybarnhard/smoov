@@ -47,11 +47,11 @@ for(geo in c("state", "county", "tract")){
   
   # Subset by and rename columns
   dt_geo = dt_geo[, colnames(dt_geo)%in%keep_cols]
-  colnames(dt_geo) = new_names
+  data.table::setnames(dt_geo, old=keep_cols, new=new_names)
   
   # Output as .rda file
-  assign(paste0(geo ,"_commute_types"), dt_geo)
+  assign(paste0(geo ,"_commute"), dt_geo)
 }
-usethis::use_data(state_commute_types, overwrite = TRUE)
-usethis::use_data(county_commute_types, overwrite = TRUE)
-usethis::use_data(tract_commute_types, overwrite = TRUE)
+usethis::use_data(state_commute, overwrite = TRUE)
+usethis::use_data(county_commute, overwrite = TRUE)
+usethis::use_data(tract_commute, overwrite = TRUE)

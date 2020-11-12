@@ -7,13 +7,15 @@
 smoov(
   geo,
   data = NULL,
-  value = NA,
+  value = NULL,
   id = "fips",
   bins = 5,
   year = 2010,
   detailed = FALSE,
   class = "sf",
-  ...
+  states = NULL,
+  counties = NULL,
+  tracts = NULL
 )
 }
 \arguments{

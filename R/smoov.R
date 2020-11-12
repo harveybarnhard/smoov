@@ -68,9 +68,16 @@ smoov = function(geo,
   }
   
   # Convert subset codes to standardized fips codes
-  subfips = standardize_geo(state=states, county=counties, tract=tracts)
+  subfips = create_fips(state=states, county=counties, tract=tracts)
   # Load shapefile, merge on data, and create base plot
-  return(smoov_plot(geo=shape, data, value, year, detailed, class, subfips))
+  return(smoov_plot(geo=shape,
+                    data=data[, c(id, value)],
+                    value=value,
+                    id=id,
+                    year=year,
+                    detailed=detailed,
+                    class=class,
+                    subsetfips=subfips))
 }
 
 #TODO: create cache feature for when many plots are being made

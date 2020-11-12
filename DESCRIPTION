@@ -19,4 +19,5 @@ Depends:
 Imports:
     data.table,
     ggplot2,
-    tigris
+    tigris,
+    data.table

@@ -1,19 +1,24 @@
 # Set libraries
 library(smoov)
 library(ggplot2)
-library(httr)
-library(jsonlite)
+library(data.table)
 
 # Set outpath for figures
 
 
 # Plot all US counties
-data(county_commute_types)
-smoov("counties")
+data(county_commute)
+dt = data.table(county_commute)
+dt[, public := sqrt(commute_public/pop_workers)]
+dt[, fips := create_fips(state, county)]
+smoov("counties", data=dt, value="public")
 
 # Plot Chicago surroundings
-data(tracts_commute_types)
-smoov(geo="tracts", states=17, counties=c(31,43))
+data(tract_commute)
+dt = data.table(tract_commute)
+dt[, public := sqrt(commute_public/pop_workers)]
+dt[, fips := create_fips(state, county, tract)]
+smoov(geo="tracts", data=tract_commute, value="commute_car", states=17, counties=c(31,43))
 
 # Plot Chicago surroundings + formatted title
 smoov("tracts", states=c(17,17,18), counties=c(31,43,89)) +
