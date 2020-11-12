@@ -43,6 +43,11 @@ smoov_plot = function(geo,
                                      expand=FALSE, datum=NA)
     
     # Determine whether to fill in value or just draw borders
+    if(geo=="tract"){
+      linesize=0.05
+    }else{
+      linesize=0.1
+    }
     if(is.null(value) & is.null(data)){
       basemap = ggplot2::ggplot(shp) +
         ggplot2::geom_sf() +
@@ -50,7 +55,7 @@ smoov_plot = function(geo,
     }else{
       midpoint = quantile(subset(data, select=value), na.rm=TRUE, probs=0.5)
       basemap = ggplot2::ggplot(shp) +
-        ggplot2::geom_sf(ggplot2::aes(fill=get(value)), size=.01) +
+        ggplot2::geom_sf(ggplot2::aes(fill=get(value)), size=linesize) +
         ggplot2::scale_fill_gradient2(name=value,
                                       low = "darkred",
                                       mid = "white",

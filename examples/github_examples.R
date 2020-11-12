@@ -18,6 +18,12 @@ active_commuting = function(data){
   mean_act = data[!is.na(active), sum(commuters*active)/sum(commuters)]
   data[is.na(active), active:=mean_act]
   data[, active := active - mean_act]
+  
+  # Winsorize at the national 95th and 75th percentile
+  act95 = quantile(data$active, probs=0.95)
+  act05 = quantile(data$active, probs=0.05)
+  data[active>act95, active:=act95]
+  data[active<act05, active:=act05]
   return(data)
 }
 
@@ -36,6 +42,10 @@ tract_commute[, fips := create_fips(state, county, tract)]
 # Plot Chicago surroundings + formatted title
 smoov(geo="tracts", data=tract_commute, value="active",
       states=c(17,17,18), counties=c(31,43,89)) +
-  labs(title="Cook and DuPage Counties (IL), Lake County (IN)") +
-  theme(plot.title = element_text(size=20, face="bold", hjust = 0.5))
+  labs(title="% of Active Commuters Relative to National Commuting Population",
+       subtitle="Cook and DuPage Counties (IL), Lake County (IN)") +
+  theme(plot.title = element_text(size=20, face="bold", hjust = 0.5),
+        plot.subtitle = element_text(size=15, face="bold", hjust = 0.5),
+        legend.position=c(0.2,0.2),
+        legend.justification=c(0.2, 0.2))
 
