@@ -41,11 +41,12 @@ tract_commute = active_commuting(tract_commute)
 tract_commute[, fips := create_fips(state, county, tract)]
 # Plot Chicago surroundings + formatted title
 smoov(geo="tracts", data=tract_commute, value="active",
-      states=c(17,17,18), counties=c(31,43,89)) +
+      states=c(17,17,17,18), counties=c(31,43,197,89)) +
   labs(title="% of Active Commuters Relative to National Commuting Population",
-       subtitle="Cook and DuPage Counties (IL), Lake County (IN)") +
+       subtitle="Cook (IL), DuPage (IL), Will (IL), and Lake (IN) Counties") +
   theme(plot.title = element_text(size=20, face="bold", hjust = 0.5),
         plot.subtitle = element_text(size=15, face="bold", hjust = 0.5),
-        legend.position=c(0.2,0.2),
-        legend.justification=c(0.2, 0.2))
+        legend.position=c(0.8,0.8),
+        legend.justification=c(0.8, 0.8))
+
 
