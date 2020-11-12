@@ -53,14 +53,16 @@ smoov_plot = function(geo,
         ggplot2::geom_sf() +
         ggplot2::theme_void()
     }else{
-      midpoint = quantile(subset(data, select=value), na.rm=TRUE, probs=0.5)
       basemap = ggplot2::ggplot(shp) +
         ggplot2::geom_sf(ggplot2::aes(fill=get(value)), size=linesize) +
-        ggplot2::scale_fill_gradient2(name=value,
-                                      low = "darkred",
-                                      mid = "white",
-                                      high = "blue",
-                                      midpoint=midpoint) +
+        ggplot2::scale_fill_gradientn(name="",
+                             values=c(0,0.4,0.5,0.6,1),
+                             colours=c("#660000",
+                                       "firebrick1",
+                                       "sandybrown",
+                                       "#007777",
+                                       "#005566"),
+                             na.value="#CCCCCC") +
         ggplot2::theme_void()
     }
     
