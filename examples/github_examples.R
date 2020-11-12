@@ -21,7 +21,7 @@ dt[, fips := create_fips(state, county, tract)]
 smoov(geo="tracts", data=tract_commute, value="commute_car", states=17, counties=c(31,43))
 
 # Plot Chicago surroundings + formatted title
-smoov("tracts", states=c(17,17,18), counties=c(31,43,89)) +
+smoov(geo="tracts", states=c(17,17,18), counties=c(31,43,89)) +
   labs(title="Cook and DuPage Counties (IL), Lake County (IN)") +
   theme(plot.title = element_text(size=20, face="bold", hjust = 0.5))
 

@@ -57,13 +57,11 @@ shp_data_merge = function(shp,
     stop(value, " is not a name of a column in the data supplied.")
   }
   
-  # TODO make this subsetting faster by using above subsets
-  
   # Perform subsetting operations, allowing for flexible input base on FIPs
   # right now
   # TODO: Create look up table for non-fips (e.g. state-name entries)
   if(length(subfips)>0){
-    data = data[.Internal(substr(data$fips, 1L, as.integer(nchar(subfips[1]))))%in%subfips,]
+    data = data[.Internal(substr(data[, id], 1L, as.integer(nchar(subfips[1]))))%in%subfips,]
   }
   
   # Final step, merge subsetted map and data together

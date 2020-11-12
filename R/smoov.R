@@ -70,8 +70,11 @@ smoov = function(geo,
   # Convert subset codes to standardized fips codes
   subfips = create_fips(state=states, county=counties, tract=tracts)
   # Load shapefile, merge on data, and create base plot
+  if(!is.null(data)){
+    data = subset.data.frame(data, select=c(id, value))
+  }
   return(smoov_plot(geo=shape,
-                    data=data[, c(id, value)],
+                    data=data,
                     value=value,
                     id=id,
                     year=year,

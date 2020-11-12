@@ -56,11 +56,10 @@ create_fips = function(state=NULL, county=NULL, tract=NULL){
     }
     
     # Make sure tract codes are appropriate length
-    if(any(nchar(tract)!=6)){
-      stringr::str_pad(tract, 5, side="right", pad= "0")
-      stop("Only 6-digit tract codes accepted as input")
-    }else if(is.numeric(tract)){
-      tract = as.character(tract)
+    if(all(nchar(tract)<=6)){
+      tract = stringr::str_pad(tract, 6, side="right", pad= "0")
+    }else{
+      stop("Tract codes should not exceed six digits!")
     }
     
     # Paste state, tract, and county together
