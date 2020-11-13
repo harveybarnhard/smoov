@@ -1,6 +1,6 @@
 # smoov
-This is a package intended to smooth over the process of mapping common objects like states, counties,
-and census tracts. Mapping in R is oftentimes involves multiple packages with varying syntaxes, leading
+This package intended smooths the process of mapping common objects like states, counties,
+and census tracts. Mapping in R oftentimes involves multiple packages with varying syntaxes, leading
 to downright ugly code, and downright ugly maps.
 This package enables **s**imple **m**apping **o**f **o**ur **v**icinities.
 
@@ -10,12 +10,12 @@ downloading of shapefiles is facilitated by the package `tigris`.
 # Example
 
 `smoov` makes maps  with sensible, visually appealing defaults for making maps
-for United States Census geographies. I have a dataset in `data.table` format
+with United States Census geographies. I have a dataset in `data.table` format
 called `county_commute` with three relevant variables:
 
 * `state`: state FIPS code in integer format
 * `county`: county FIPS code in integer format
-* `active`: % of workers who commute by walking or cycling subtracting
+* `active`: % of workers who commute by walking or cycling subtracted
             by the national % of workers who commute by walking or cycling
 
 In order to create a county-level map, this is all I need to do.
@@ -39,12 +39,16 @@ column `"active"` in the dataset `county_commute`.
 Let's say I'm interested in tract-level data in and around Chicago, IL. To produce
 such maps, this would usually require several slow, multi-line steps:
 
-1. Load shapefile(s)
-2. Merge shapefiles and relevant data onto shapefile (tract shapefiles are often
+1. Load shapefile(s).
+2. Merge shapefiles (tract shapefiles are often
    separated by state).
-3. Subset data appropriately.
+3. Merge tract-level data onto shapefiles.
+4. Subset data appropriately.
+5. Map
+6. Modify map aesthetics
 
-With `smoov` however, this process is simpliefied to _one line_.
+With `smoov` however, steps one through five, and parts of step six
+are simplified to _one line_.
 First, the level of geography is provided with the `geo` parameter.
 Next, optional subsetting takes place using state, county and tract
 [FIPS](https://transition.fcc.gov/oet/info/maps/census/fips/fips.txt#:~:text=FIPS%20codes%20are%20numbers%20which,to%20which%20the%20county%20belongs.)
@@ -72,8 +76,8 @@ smoov(geo="tracts", data=tract_commute, value="active",
 
 ## Setup
 
-Installation of this package is most easily performed by running the following line
-of code.
+It's easiest to install this package by running the following line of code in the R
+console.
 
 ```r
 devtools::install_github("harveybarnhard/smoov")
