@@ -24,6 +24,8 @@ county_commute[, fips := create_fips(state, county)]
 smoov("counties", data=county_commute, value="active")
 ```
 
+![](examples/county_example.png)
+
 The first step uses `smoov::create_fips` to properly concatenate state and
 county FIPS codes (or state, county, and tract codes), regardless of string
 length. The second step plots at the level of `"counties` using the
@@ -57,8 +59,9 @@ smoov(geo="tracts", data=tract_commute, value="active",
         plot.subtitle = element_text(size=15, face="bold", hjust = 0.5),
         legend.position=c(0.8,0.8),
         legend.justification=c(0.8, 0.8))
-ggsave(file.path(outpath, "tract_example.png"))
 ```
+
+![](examples/tract_example.png)
 
 ## Setup
 
