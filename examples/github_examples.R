@@ -32,7 +32,7 @@ active_commuting = function(data){
 data(county_commute)
 county_commute = active_commuting(county_commute)
 
-# Create fips code and plto
+# Create fips code and plot
 county_commute[, fips := create_fips(state, county)]
 smoov("counties", data=county_commute, value="active")
 ggsave(file.path(outpath, "county_example.png"))
@@ -41,6 +41,7 @@ ggsave(file.path(outpath, "county_example.png"))
 data(tract_commute)
 tract_commute = active_commuting(tract_commute)
 tract_commute[, fips := create_fips(state, county, tract)]
+
 # Plot Chicago surroundings + formatted title
 smoov(geo="tracts", data=tract_commute, value="active",
       states=c(17,17,17,18), counties=c(31,43,197,89)) +

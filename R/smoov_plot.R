@@ -56,10 +56,10 @@ smoov_plot = function(geo,
       basemap = ggplot2::ggplot(shp) +
         ggplot2::geom_sf(ggplot2::aes(fill=get(value)), size=linesize) +
         ggplot2::scale_fill_gradientn(name="",
-                             values=c(0,0.4,0.5,0.6,1),
-                             colours=c("#660000",
-                                       "firebrick1",
-                                       "sandybrown",
+                             values=c(0,0.35,0.5,0.65,1),
+                             colours=c("#990000",
+                                       "#ff3030",
+                                       "#FFD699",
                                        "#007777",
                                        "#005566"),
                              na.value="#CCCCCC") +
@@ -120,8 +120,8 @@ smoov_plot = function(geo,
             ymin = -2450000,
             ymax = -2450000 + (23 - 18)*120000
           ) +
-          ggplot2::theme(legend.position=c(0.05,1),
-                         legend.justification=c(0.05, 0.95))
+          ggplot2::theme(legend.position=c(0.05,0.9),
+                         legend.justification=c(0.05, 0.9))
       )
     }else{
       return(basemap)
