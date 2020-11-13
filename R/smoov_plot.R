@@ -7,12 +7,18 @@ smoov_plot = function(geo,
                       year,
                       detailed,
                       class,
-                      subsetfips=NULL){
+                      subsetfips=NULL,
+                      gradient="redblue",
+                      direction=1,
+                      linesize=NULL,
+                      alpha=0.8){
+  
+  # Handle input ===============================================================
   if(is.logical(detailed)){
     ifelse(detailed, detailed <- "detailed", detailed <- "coarse")
   }
   
-  # Read in the map from .rds format
+  # Read in the map from .rds format ===========================================
   smoovpath = local(smoovpath, envir=.smoov_env)
   shppath   = file.path(smoovpath,
                         paste0(paste(geo, year, detailed, class, sep="_"),
@@ -23,10 +29,12 @@ smoov_plot = function(geo,
   }
   shp <- readRDS(shppath)
   
+  # Merge data =================================================================
   outlist = shp_data_merge(shp, data, id, value, subsetfips)
   shp <- outlist[[1]]
   subset_logic = outlist[[2]]
   
+  # Create plots ===============================================================
   # Move Hawaii and Alaska
   # https://www.r-spatial.org/r/2018/10/25/ggplot2-sf-3.html
   if(class=="sf"){
@@ -43,9 +51,9 @@ smoov_plot = function(geo,
                                      expand=FALSE, datum=NA)
     
     # Determine whether to fill in value or just draw borders
-    if(geo=="tract"){
+    if(geo=="tract" & is.null(linesize)){
       linesize=0.05
-    }else{
+    }else if(is.null(linesize)){
       linesize=0.1
     }
     if(is.null(value) & is.null(data)){
@@ -53,15 +61,27 @@ smoov_plot = function(geo,
         ggplot2::geom_sf() +
         ggplot2::theme_void()
     }else{
+      if(gradient=="redblue"){
+        colors = c("#990000",
+                   "#ff3030",
+                   "#FFD699",
+                   "#007777",
+                   "#005566")
+      }
+      
+      if(direction==-1){
+        colors = rev(colors)
+      }
+      
+      # TODO pick values in a way that adjusts based on distribution
+      
       basemap = ggplot2::ggplot(shp) +
-        ggplot2::geom_sf(ggplot2::aes(fill=get(value)), size=linesize) +
+        ggplot2::geom_sf(ggplot2::aes(fill=get(value)),
+                         size=linesize,
+                         alpha=alpha) +
         ggplot2::scale_fill_gradientn(name="",
                              values=c(0,0.35,0.5,0.65,1),
-                             colours=c("#990000",
-                                       "#ff3030",
-                                       "#FFD699",
-                                       "#007777",
-                                       "#005566"),
+                             colours=colors,
                              na.value="#CCCCCC") +
         ggplot2::theme_void()
     }

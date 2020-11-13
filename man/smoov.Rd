@@ -15,7 +15,8 @@ smoov(
   class = "sf",
   states = NULL,
   counties = NULL,
-  tracts = NULL
+  tracts = NULL,
+  ...
 )
 }
 \arguments{
@@ -26,7 +27,7 @@ See details.}
 
 \item{value}{character; Name of the column in \code{data} with which a
 choropleth is created. If no column is provided, a map of boundaries
-is produced. If more than one value is inputted, a facetted map is
+is produced. If more than one value is inputted, a faceted map is
 created.}
 
 \item{id}{character; "fips" by default.
@@ -43,7 +44,8 @@ used when available. See details.}
 
 \item{class}{\code{"sp"} or \code{"sf"}; \code{"sf"} by default. See details.}
 
-\item{...}{Optional parameters depending on choice of \code{shape}. See details.}
+\item{...}{Optional mapping parameters, such as what color scale to use. See
+details for more information}
 }
 \value{
 \preformatted{Output will be a `ggplot` base layer onto which any `ggplot` layer may
@@ -52,4 +54,15 @@ be added.
 }
 \description{
 Simple mapping tool
+}
+\details{
+\preformatted{The following are options mapping parameters 
+}
+\itemize{
+\item \code{gradient}: The color gradient to be plotted, currently only "redblue"
+\item \code{direction}: The direction the color gradient should go. Default is
+\code{direction=1} for low values to get the first value of the gradient and
+\code{direction=-1} is for low values to get the second value of the
+color gradient.
+}
 }

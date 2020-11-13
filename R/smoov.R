@@ -8,7 +8,7 @@
 #' @param value
 #'     character; Name of the column in `data` with which a
 #'     choropleth is created. If no column is provided, a map of boundaries
-#'     is produced. If more than one value is inputted, a facetted map is
+#'     is produced. If more than one value is inputted, a faceted map is
 #'     created.
 #' @param id
 #'     character; "fips" by default.
@@ -25,10 +25,23 @@
 #' @param class
 #'     `"sp"` or `"sf"`; `"sf"` by default. See details.
 #' @param ...
-#'     Optional parameters depending on choice of `shape`. See details.
+#'     Optional mapping parameters, such as what color scale to use. See
+#'     details for more information
 #' @return 
 #'     Output will be a `ggplot` base layer onto which any `ggplot` layer may
 #'     be added. 
+#' @details
+#'     The following are options mapping parameters 
+#' * `gradient`: The color gradient to be plotted, currently only "redblue"
+#' * `direction`: The direction the color gradient should go. Default is
+#'   `direction=1` for low values to get the first value of the gradient and
+#'   `direction=-1` is for low values to get the second value of the
+#'   color gradient.
+#' * `linesize`: The size of the borders of geographic units. Defaults to
+#'   0.05 for plotting tracts, 0.1 for other levels of geography
+#' * `alpha`: Transparency parameter for fill colors. 0 is completely
+#'   transparent and 1 is completely opaque. Defaults to 
+#'     
 #' @export
 
 smoov = function(geo,
@@ -41,7 +54,8 @@ smoov = function(geo,
                  class="sf",
                  states=NULL,
                  counties=NULL,
-                 tracts=NULL){
+                 tracts=NULL,
+                 ...){
   
   # Obtain smoov filepath and make sure environment is loaded ==================
   if(is.null(options("smoovpath"))){
@@ -80,7 +94,8 @@ smoov = function(geo,
                     year=year,
                     detailed=detailed,
                     class=class,
-                    subsetfips=subfips))
+                    subsetfips=subfips,
+                    ...))
 }
 
 #TODO: create cache feature for when many plots are being made

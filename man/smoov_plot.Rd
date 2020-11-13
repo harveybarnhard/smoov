@@ -12,7 +12,10 @@ smoov_plot(
   year,
   detailed,
   class,
-  subsetfips = NULL
+  subsetfips = NULL,
+  gradient = "redblue",
+  direction = 1,
+  linesize = NULL
 )
 }
 \description{
