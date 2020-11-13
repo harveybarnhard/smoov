@@ -20,7 +20,9 @@ called `county_commute` with three relevant variables:
 
 In order to create a county-level map, this is all I need to do.
 ```r
+# Load data and create active commuter column using pre-made function
 data(county_commute)
+county_commute = active_commuting(county_commute)
 
 # Create FIPS code and plot!
 county_commute[, fips := create_fips(state, county)]
