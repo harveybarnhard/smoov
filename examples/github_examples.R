@@ -49,7 +49,7 @@ smoov(geo="tracts", data=tract_commute, value="active",
        subtitle="Cook (IL), DuPage (IL), Will (IL), and Lake (IN) Counties") +
   theme(plot.title = element_text(size=20, face="bold", hjust = 0.5),
         plot.subtitle = element_text(size=15, face="bold", hjust = 0.5),
-        legend.position=c(0.8,0.8),
-        legend.justification=c(0.8, 0.8))
+        legend.position=c(0.9,0.8),
+        legend.justification=c(0.9, 0.8))
 ggsave(file.path(outpath, "tract_example.png"))
 

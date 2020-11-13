@@ -11,7 +11,7 @@ smoov_plot = function(geo,
                       gradient="redblue",
                       direction=1,
                       linesize=NULL,
-                      alpha=0.8){
+                      alpha=0.9){
   
   # Handle input ===============================================================
   if(is.logical(detailed)){
