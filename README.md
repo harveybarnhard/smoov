@@ -52,10 +52,12 @@ codes. The object produced by `smoov()` is simply a `ggplot2` object, so additio
 can be added using the ggplot2 syntax:
 
 ```r
+# Load data and create active commuter column
 data(tract_commute)
 tract_commute = active_commuting(tract_commute)
 tract_commute[, fips := create_fips(state, county, tract)]
-# Plot Chicago surroundings + formatted title
+
+# Plot Chicago surroundings and beautify using ggplot layers
 smoov(geo="tracts", data=tract_commute, value="active",
       states=c(17,17,17,18), counties=c(31,43,197,89)) +
   labs(title="% of Active Commuters Relative to National Commuting Population",
