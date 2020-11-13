@@ -20,6 +20,9 @@ called `county_commute` with three relevant variables:
 
 In order to create a county-level map, this is all I need to do.
 ```r
+data(county_commute)
+
+# Create FIPS code and plot!
 county_commute[, fips := create_fips(state, county)]
 smoov("counties", data=county_commute, value="active")
 ```
@@ -64,6 +67,13 @@ smoov(geo="tracts", data=tract_commute, value="active",
 ![](examples/tract_example.png)
 
 ## Setup
+
+Installation of this package is most easily performed by running the following line
+of code.
+
+```r
+devtools::install_github("harveybarnhard/smoov")
+```
 
 Before using `smoov`, the shapefiles must be downloaded and converted to .rds files for
 efficient loading and use by `smoov` functions. The function `smoov_setup()` serves
