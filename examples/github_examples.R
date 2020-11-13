@@ -4,6 +4,7 @@ library(ggplot2)
 library(data.table)
 
 # Set outpath for figures
+outpath = "C:/Users/hab737/GitHub/smoov/examples"
 
 # Function to calculate relative active commuting ==============================
 active_commuting = function(data){
@@ -34,6 +35,7 @@ county_commute = active_commuting(county_commute)
 # Create fips code and plto
 county_commute[, fips := create_fips(state, county)]
 smoov("counties", data=county_commute, value="active")
+ggsave(file.path(outpath, "county_example.png"))
 
 # Plot Chicago surroundings ====================================================
 data(tract_commute)
@@ -48,5 +50,5 @@ smoov(geo="tracts", data=tract_commute, value="active",
         plot.subtitle = element_text(size=15, face="bold", hjust = 0.5),
         legend.position=c(0.8,0.8),
         legend.justification=c(0.8, 0.8))
-
+ggsave(file.path(outpath, "tract_example.png"))
 
