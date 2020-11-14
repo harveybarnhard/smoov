@@ -78,12 +78,3 @@ unitquant = function(x, probs){
     (quantile(x,probs=probs) - xmin)/(max(x) - xmin)
   )
 }
-
-
-# Function to return "nice" numbers for legend
-nicenum = function(x, digits){
-  ind = abs(x)>=1
-  x[ind] = round(x[ind],digits)
-  x[!ind] = signif(x[!ind], digits)
-  return(x)
-}
