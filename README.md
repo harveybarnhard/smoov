@@ -77,7 +77,20 @@ bos = bos +
 
 ![](examples/tract_example2.png)
 
-## Setup
+## Features
+
+1. Reduces hassle
+   * Automatically loads shapefiles from a faster `.rds` format
+   * Automatically merges data values onto shapefile
+2. Subsetting to specific geographies is fast and simple
+3. Default aesthetics are optimized for visual clarity
+   * Color gradient corresponds to quantiles of plotted values
+   * Fill and border colors draw attention to the _differences_ between
+   geometries rather than the _shape_ of geometries.
+4. If you don't like the aesthetics, just use `ggplot2::theme`
+and other `ggplot` layers like in the example above
+
+## Instllation and Setup
 
 It's easiest to install this package by running the following line of code in the R
 console.
