@@ -43,7 +43,7 @@ create_fips = function(state=NULL, county=NULL, tract=NULL){
   }
   if(!is.null(tract)){
     # Input error handling
-    if(any(is.null(list(state, county)))){
+    if(is.null(state) | is.null(county)){
       stop("`states` and `counties` must be provided along with `tracts`")
     }
     if((length(state)>1 | length(county)>1) & 
@@ -77,4 +77,13 @@ unitquant = function(x, probs){
   return(
     (quantile(x,probs=probs) - xmin)/(max(x) - xmin)
   )
+}
+
+
+# Function to return "nice" numbers for legend
+nicenum = function(x, digits){
+  ind = abs(x)>=1
+  x[ind] = round(x[ind],digits)
+  x[!ind] = signif(x[!ind], digits)
+  return(x)
 }
