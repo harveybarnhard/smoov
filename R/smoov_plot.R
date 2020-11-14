@@ -54,8 +54,8 @@ smoov_plot = function(geo,
                                      expand=FALSE, datum=NA)
 
     if(is.null(value) & is.null(data)){
-      basemap = ggplot2::ggplot(shp) +
-        ggplot2::geom_sf(lwd=linesize) +
+      basemap = ggplot2::ggplot() +
+        ggplot2::geom_sf(data=shp, lwd=linesize) +
         ggplot2::theme_void()
     }else{
       if(gradient=="redblue"){
@@ -76,8 +76,9 @@ smoov_plot = function(geo,
       )
       value_quant = quantile(values, probs=gradient_breaks, na.rm=TRUE)
       value_range = unitquant(values, probs=gradient_breaks)
-      basemap = ggplot2::ggplot(shp) +
-        ggplot2::geom_sf(ggplot2::aes(fill=get(value), color=get(value)),
+      basemap = ggplot2::ggplot() +
+        ggplot2::geom_sf(data=shp,
+                         ggplot2::aes(fill=get(value), color=get(value)),
                          alpha=alpha,
                          size=linesize) +
         ggplot2::scale_fill_gradientn(name="",
@@ -101,13 +102,14 @@ smoov_plot = function(geo,
     if(subset_logic[2]){
       sublog = .Internal(substr(shp$fips, 1L, 2L))=="02"
       if(is.null(value) & is.null(data)){
-        alaska = ggplot2::ggplot(subset(shp, subset=sublog)) +
-          ggplot2::geom_sf(lwd=linesize) +
+        alaska = ggplot2::ggplot() +
+          ggplot2::geom_sf(data=subset(shp, subset=sublog),lwd=linesize) +
           ggplot2::theme_void() +
           alaska_coord
       }else{
-        alaska = ggplot2::ggplot(subset(shp$data, subset=sublog)) +
-          ggplot2::geom_sf(ggplot2::aes(fill=get(value), color=get(value)),
+        alaska = ggplot2::ggplot() +
+          ggplot2::geom_sf(data=subset(shp$data, subset=sublog),
+                           mapping=ggplot2::aes(fill=get(value), color=get(value)),
                            alpha=alpha,
                            size=linesize) +
           ggplot2::scale_fill_gradientn(name="",
@@ -134,13 +136,14 @@ smoov_plot = function(geo,
     if(subset_logic[3]){
       sublog = .Internal(substr(shp$fips, 1L, 2L))=="15"
       if(is.null(value) & is.null(data)){
-        hawaii = ggplot2::ggplot(subset(shp, subset=sublog)) +
-          ggplot2::geom_sf(lwd=linesize) +
+        hawaii = ggplot2::ggplot() +
+          ggplot2::geom_sf(data=subset(shp, subset=sublog),lwd=linesize) +
           ggplot2::theme_void() +
           hawaii_coord
       }else{
-        hawaii = ggplot2::ggplot(subset(shp$data, subset=sublog)) +
-          ggplot2::geom_sf(ggplot2::aes(fill=get(value), color=get(value)),
+        hawaii = ggplot2::ggplot() +
+          ggplot2::geom_sf(data=subset(shp$data, subset=sublog),
+                           mapping=ggplot2::aes(fill=get(value), color=get(value)),
                            alpha=alpha,
                            size=linesize) +
           ggplot2::scale_fill_gradientn(name="",
