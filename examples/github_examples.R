@@ -44,7 +44,7 @@ tract_commute[, fips := create_fips(state, county, tract)]
 
 # Plot Chicago surroundings + formatted title
 chi = smoov(geo="tracts", data=tract_commute, value="active",
-      states=c(17,17,17,18), counties=c(31,43,197,89), alpha=0.5, linesize=0) +
+      states=c(17,17,17,18), counties=c(31,43,197,89), alpha=0.9) +
   labs(title="% of Active Commuters Relative to National Commuting Population",
        subtitle="Cook (IL), DuPage (IL), Will (IL), and Lake (IN) Counties") +
   theme(plot.title = element_text(size=20, face="bold", hjust = 0.5),
@@ -54,10 +54,10 @@ chi = smoov(geo="tracts", data=tract_commute, value="active",
 ggsave(file.path(outpath, "tract_example.png"), plot=chi)
 
 library(osmdata)
-med_streets <- st_bbox(chi$data)%>%
-  opq()%>%
-  add_osm_feature(key = "place", value = c("city", "town")) %>%
-  osmdata_sf()
+med_streets <- sf::st_bbox(chi$data)%>%
+  osmdata::opq()%>%
+  osmdata::add_osm_feature(key = "place", value = c("city")) %>%
+  osmdata::osmdata_sf()
 
 
 labellayer = ggrepel::geom_text_repel(
