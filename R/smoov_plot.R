@@ -10,8 +10,9 @@ smoov_plot = function(geo,
                       subsetfips=NULL,
                       gradient="redblue",
                       direction=1,
-                      linesize=NULL,
-                      alpha=0.9){
+                      linesize=0.1,
+                      alpha=0.9,
+                      bordercolor=NA){
   
   # Handle input ===============================================================
   if(is.logical(detailed)){
@@ -74,15 +75,22 @@ smoov_plot = function(geo,
       }
       
       # TODO pick values in a way that adjusts based on distribution
-      
+      vals = do.call("$", list(shp, value))
+      vmax = max(vals, na.rm=TRUE)
+      vmin = min(vals, na.rm=TRUE)
+      value_range = (quantile(vals,probs=c(0,0.35,0.5,0.65,1)) - vmin)/(vmax - vmin)
       basemap = ggplot2::ggplot(shp) +
-        ggplot2::geom_sf(ggplot2::aes(fill=get(value)),
-                         size=linesize,
-                         alpha=alpha) +
+        ggplot2::geom_sf(ggplot2::aes(fill=get(value), color=get(value)),
+                         alpha=alpha,
+                         size=linesize) +
         ggplot2::scale_fill_gradientn(name="",
-                             values=c(0,0.35,0.5,0.65,1),
+                             values=value_range,
                              colours=colors,
                              na.value="#CCCCCC") +
+        ggplot2::scale_color_gradientn(name="",
+                                      values=value_range,
+                                      colours=colors,
+                                      na.value="#CCCCCC") +
         ggplot2::theme_void()
     }
     
