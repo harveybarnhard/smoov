@@ -13,6 +13,7 @@ shp_data_merge = function(shp,
                           subfips=NULL){
   
   # Perform subsetting operations on shp =======================================
+  shp$state = .Internal(substr(shp$fips, 1L, 2L))
   if(!is.null(subfips)){
     if(nchar(subfips[1])>nchar(shp$fips[1])){
       stop("You tried to subset to a finer level of geography than provided by ",
@@ -36,16 +37,17 @@ shp_data_merge = function(shp,
   #    TRUE if One of Alaska or Hawaii are plotted along with at least one
   #         mainland state
   #    FALSE otherwise (e.g. one of Alaska or Hawaii, or mainland states)
-  usa = ifelse(alaska&hawaii, TRUE,
-               ifelse((alaska|hawaii) & 
-                      (length(setdiff(unqstates, c("02", "15")))>0 |
-                      length(unqstates)==0),
-                      TRUE, FALSE))
+  usa = ifelse(
+    alaska&hawaii, TRUE, ifelse(
+      (alaska|hawaii) & 
+      (length(setdiff(unqstates, c("02", "15")))>0 | length(unqstates)==0),
+      TRUE, FALSE
+    )
+  )
   
   # If no data is provided, then map of USA is created
   if(is.null(data) & is.null(value)){
-    message("No data or value supplied, plotting map of borders.")
-    return(list(shp, c(usa, alaska, hawaii)))
+    return(list(shp = shp, subset_logic = c(usa, alaska, hawaii)))
   }
   
   
@@ -57,14 +59,14 @@ shp_data_merge = function(shp,
     stop(value, " is not a name of a column in the data supplied.")
   }
   
-  # Perform subsetting operations, allowing for flexible input base on FIPs
+  # Perform subsetting operations, allowing for flexible input base on FIPS
   # right now
-  # TODO: Create look up table for non-fips (e.g. state-name entries)
+  # TODO: Create look up table for non-FIPS (e.g. state-name entries)
   if(length(subfips)>0){
     data = data[.Internal(substr(data[, id], 1L, as.integer(nchar(subfips[1]))))%in%subfips,]
   }
   
   # Final step, merge subsetted map and data together
   shp  = merge(shp, data, by.x="fips", by.y=id, all.x=TRUE)
-  return(list(shp, c(usa, alaska, hawaii)))
+  return(list(shp = shp, subset_logic = c(usa, alaska, hawaii)))
 }
