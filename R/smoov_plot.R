@@ -9,7 +9,8 @@ smoov_plot = function(geo,
                       class,
                       subsetfips=NULL,
                       gradient="redblue",
-                      direction=1,
+                      gradient_dir=1,
+                      gradient_breaks=c(0,0.35,0.5,0.65,1),
                       linesize=0.1,
                       alpha=0.9,
                       bordercolor=NA){
@@ -70,11 +71,13 @@ smoov_plot = function(geo,
                    "#005566")
       }
       
-      if(direction==-1){
+      if(gradient_dir==-1){
         colors = rev(colors)
       }
-      
-      value_range = unitquant(do.call("$", list(shp, value)),
+      values = .Internal(do.call(what="$",
+                                 args=list(shp, value),
+                                 envir=parent.frame()))
+      value_range = unitquant(values,
                               probs=c(0,0.35,0.5,0.65,1))
       basemap = ggplot2::ggplot(shp) +
         ggplot2::geom_sf(ggplot2::aes(fill=get(value), color=get(value)),
@@ -84,9 +87,10 @@ smoov_plot = function(geo,
                              values=value_range,
                              colours=colors,
                              na.value="#CCCCCC",
-                             labels=value_range,
-                             breaks=quantile(do.call("$", list(shp, value)),
-                                             probs=c(0,0.35,0.5,0.65,1))) +
+                             labels=nicenum(value_range,3),
+                             breaks=quantile(values,
+                                             probs=c(0,0.35,0.5,0.65,1),
+                                             na.rm=TRUE)) +
         ggplot2::scale_color_gradientn(name="",
                                       values=value_range,
                                       colours=colors,
@@ -150,7 +154,9 @@ smoov_plot = function(geo,
             ymax = -2450000 + (23 - 18)*120000
           ) +
           ggplot2::theme(legend.position=c(0.05,0.9),
-                         legend.justification=c(0.05, 0.9))
+                         legend.justification=c(0.05, 0.9),
+                         legend.key.size = unit(1.5, "cm"),
+                         legend.key.width = unit(0.5,"cm"))
       )
     }else{
       return(basemap)

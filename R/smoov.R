@@ -14,35 +14,44 @@
 #'     character; "fips" by default.
 #'     Name of the column in `data` that provides the relevant
 #'     geography identifier (e.g. FIPS code).
-#' @param bins
-#'     integer; 5 by default.
 #' @param year
 #'     integer; Currently either 2000 or 2010. Year of census geography. The
 #'     most recent year by default.
 #' @param detailed
 #'     logical; FALSE by default. If TRUE, then  more detailed geographies are
-#'     used when available. See details.
+#'     used when available
 #' @param class
-#'     `"sp"` or `"sf"`; `"sf"` by default. See details.
+#'     `"sp"` or `"sf"`; `"sf"` by default.
 #' @param ...
-#'     Optional mapping parameters, such as what color scale to use. See
-#'     details for more information
+#'     Optional aesthetic parameters, subsetting parameters. See details below.
 #' @return 
 #'     Output will be a `ggplot` base layer onto which any `ggplot` layer may
 #'     be added. 
-#' @details
-#'     The following are options mapping parameters 
+#' @section Geographic Subsetting Parameters:
+#' * `states`: Vector of state \href{https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code}{FIPS} codes.
+#'   Character and numeric vectors allowed.
+#' * `counties`: Vector of county \href{https://www.nrcs.usda.gov/wps/portal/nrcs/detail/national/home/?cid=nrcs143_013697}{FIPS} codes.
+#'   Character and numeric vectors allowed. If length of `states` vector is
+#'   longer than one, then `counties` vector must be of the same length.
+#' @section Aesthetic Parameters:
 #' * `gradient`: The color gradient to be plotted, currently only "redblue"
-#' * `direction`: The direction the color gradient should go. Default is
-#'   `direction=1` for low values to get the first value of the gradient and
-#'   `direction=-1` is for low values to get the second value of the
+#' * `gradient_dir`: The direction the color gradient should go. Default is
+#'   `1` for low values to get the first value of the gradient and
+#'   `-1` is for low values to get the second value of the
 #'   color gradient.
+#' * `gradient_breaks`: A vector of five probabilities in \eqn{[0,1]^5}
+#'   that define the quantiles of `values` that the gradient emphasizes.
+#'   Defaults to `c(0,0.35,0.5,0.65,1)`
 #' * `linesize`: The size of the borders of geographic units. Defaults to
 #'   0.05 for plotting tracts, 0.1 for other levels of geography
 #' * `alpha`: Transparency parameter for fill colors. 0 is completely
 #'   transparent and 1 is completely opaque. Defaults to 0.9
 #' * `bordercolor`: Color of geography borders
+<<<<<<< Updated upstream
 #'   transparent and 1 is completely opaque. Defaults to 0.9.
+=======
+#' 
+>>>>>>> Stashed changes
 #'     
 #' @export
 
@@ -50,7 +59,6 @@ smoov = function(geo,
                  data=NULL,
                  value=NULL,
                  id="fips",
-                 bins=5,
                  year=2010,
                  detailed=FALSE,
                  class="sf",
@@ -87,7 +95,11 @@ smoov = function(geo,
   subfips = create_fips(state=states, county=counties, tract=tracts)
   # Load shapefile, merge on data, and create base plot
   if(!is.null(data)){
-    data = subset.data.frame(data, select=c(id, value))
+    if(is.null(value)){
+      stop("Must provided `value` if providing `data`")
+    }
+    inds = .Internal(do.call(what="$", args=list(data,id)))
+    data = data[inds, c(id, value), drop=drop]
   }
   return(smoov_plot(geo=shape,
                     data=data,
