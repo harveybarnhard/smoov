@@ -43,7 +43,7 @@ create_fips = function(state=NULL, county=NULL, tract=NULL){
   }
   if(!is.null(tract)){
     # Input error handling
-    if(any(is.null(list(state, county)))){
+    if(is.null(state) | is.null(county)){
       stop("`states` and `counties` must be provided along with `tracts`")
     }
     if((length(state)>1 | length(county)>1) & 

@@ -9,7 +9,6 @@ smoov(
   data = NULL,
   value = NULL,
   id = "fips",
-  bins = 5,
   year = 2010,
   detailed = FALSE,
   class = "sf",
@@ -34,18 +33,15 @@ created.}
 Name of the column in \code{data} that provides the relevant
 geography identifier (e.g. FIPS code).}
 
-\item{bins}{integer; 5 by default.}
-
 \item{year}{integer; Currently either 2000 or 2010. Year of census geography. The
 most recent year by default.}
 
 \item{detailed}{logical; FALSE by default. If TRUE, then  more detailed geographies are
-used when available. See details.}
+used when available}
 
-\item{class}{\code{"sp"} or \code{"sf"}; \code{"sf"} by default. See details.}
+\item{class}{\code{"sp"} or \code{"sf"}; \code{"sf"} by default.}
 
-\item{...}{Optional mapping parameters, such as what color scale to use. See
-details for more information}
+\item{...}{Optional aesthetic parameters, subsetting parameters. See details below.}
 }
 \value{
 \preformatted{Output will be a `ggplot` base layer onto which any `ggplot` layer may
@@ -55,15 +51,32 @@ be added.
 \description{
 Simple mapping tool
 }
-\details{
-\preformatted{The following are options mapping parameters 
+\section{Geographic Subsetting Parameters}{
+
+\itemize{
+\item \code{states}: Vector of state \href{https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code}{FIPS} codes.
+Character and numeric vectors allowed.
+\item \code{counties}: Vector of county \href{https://www.nrcs.usda.gov/wps/portal/nrcs/detail/national/home/?cid=nrcs143_013697}{FIPS} codes.
+Character and numeric vectors allowed. If length of \code{states} vector is
+longer than one, then \code{counties} vector must be of the same length.
+\item \code{tracts}: Vector of tract \href{https://www.policymap.com/2012/08/tips-on-fips-a-quick-guide-to-geographic-place-codes-part-iii/}{FIPS} codes.
+Character and numeric vectors allowed. If length of \code{states} vector or
+\code{counties} vector islonger than one, then \code{tracts} vector must be of
+the same length as \code{counties} vector.
 }
+}
+
+\section{Aesthetic Parameters}{
+
 \itemize{
 \item \code{gradient}: The color gradient to be plotted, currently only "redblue"
-\item \code{direction}: The direction the color gradient should go. Default is
-\code{direction=1} for low values to get the first value of the gradient and
-\code{direction=-1} is for low values to get the second value of the
+\item \code{gradient_dir}: The direction the color gradient should go. Default is
+\code{1} for low values to get the first value of the gradient and
+\code{-1} is for low values to get the second value of the
 color gradient.
+\item \code{gradient_breaks}: A vector of five probabilities in \eqn{[0,1]^5}
+that define the quantiles of \code{values} that the gradient emphasizes.
+Defaults to \code{c(0,0.35,0.5,0.65,1)}
 \item \code{linesize}: The size of the borders of geographic units. Defaults to
 0.05 for plotting tracts, 0.1 for other levels of geography
 \item \code{alpha}: Transparency parameter for fill colors. 0 is completely
@@ -71,3 +84,4 @@ transparent and 1 is completely opaque. Defaults to 0.9
 \item \code{bordercolor}: Color of geography borders
 }
 }
+

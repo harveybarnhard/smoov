@@ -14,10 +14,12 @@ smoov_plot(
   class,
   subsetfips = NULL,
   gradient = "redblue",
-  direction = 1,
+  gradient_dir = 1,
+  gradient_breaks = c(0, 0.3, 0.5, 0.7, 1),
   linesize = 0.1,
   alpha = 0.9,
-  bordercolor = NA
+  bordercolor = NA,
+  legend_sigfigs = 2
 )
 }
 \description{

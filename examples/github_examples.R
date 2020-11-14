@@ -7,33 +7,54 @@ library(data.table)
 outpath = "C:/Users/hab737/GitHub/smoov/examples"
 
 # Plot all US counties =========================================================
+actcom = function(pop, stayhome, bcycle, walk){
+  # Calculate proportion of active commuters
+  commuters = pop
+  commuters[commuters<0] = NA
+  active = 100*(bcycle + walk+1)/(commuters+1)
+  
+  # Winsorize
+  quants = quantile(active, probs=c(0.05,0.95), na.rm=TRUE)
+  active[active<quants[1]] = quants[1]
+  active[active>quants[2]] = quants[2]
+  return(
+    active
+  )
+}
+
 data(county_commute)
-data = data.table(data)
-data[, commuters := pop_workers - commute_stayhome]
-data[commuters<0, commuters:=NA]
-data[, commute_active := (commute_bcycle + commute_walked+1)/(commuters+1)]
-county_commute = active_commuting(county_commute)
+dtc = data.table(county_commute)
+dtc = dtc[, active := actcom(pop_workers, commute_stayhome,
+                             commute_bcycle, commute_walked)]
 
 # Create fips code and plot
-county_commute[, fips := create_fips(state, county)]
-smoov("counties", data=county_commute, value="commute_active")
-ggsave(file.path(outpath, "county_example.png"))
+dtc[, fips := create_fips(state, county)]
+usa = smoov("counties", data=dtc, value="active")
+ggsave(file.path(outpath, "county_example.png"), plot=usa)
 
-# Plot Chicago surroundings ====================================================
+# Plot Boston surroundings =====================================================
 data(tract_commute)
-tract_commute = active_commuting(tract_commute)
-tract_commute[, fips := create_fips(state, county, tract)]
+dtt = data.table(tract_commute)
+dtt = dtt[, active := actcom(pop_workers, commute_stayhome,
+                             commute_bcycle, commute_walked)]
+dtt[, fips := create_fips(state, county, tract)]
 
-# Plot Chicago surroundings + formatted title
-chi = smoov(geo="tracts", data=tract_commute, value="commute_active",
-      states=c(17,17,17,18), counties=c(31,43,197,89)) +
-  labs(title="% of Active Commuters Relative to National Commuting Population",
-       subtitle="Cook (IL), DuPage (IL), Will (IL), and Lake (IN) Counties") +
+# Plot Boston surroundings
+east_MA =  c(1,5,17,21,23,25,027)
+bos = smoov(geo="tracts", data=dtt, value="active", states=25, counties=east_MA)
+ggsave(file.path(outpath, "tract_example1.png"), plot=bos)
+
+# Plot Boston surroundings with titles and formatted legend
+bos = bos +
+  labs(title="Active Commuters in Eastern Massachusetts",
+       subtitle="% of Commuters who Walk or Cycle by Census Tract") +
   theme(plot.title = element_text(size=20, face="bold", hjust = 0.5),
         plot.subtitle = element_text(size=15, face="bold", hjust = 0.5),
-        legend.position=c(0.9,0.8),
-        legend.justification=c(0.9, 0.8))
-ggsave(file.path(outpath, "tract_example.png"), plot=chi)
+        legend.position=c(0.8,0.9),
+        legend.justification=c(0.8, 0.9),
+        legend.key.size = unit(1.5, "cm"),
+        legend.key.width = unit(0.5,"cm"))
+ggsave(file.path(outpath, "tract_example2.png"), plot=bos)
 
 library(osmdata)
 med_streets <- sf::st_bbox(chi$data)%>%
