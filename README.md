@@ -84,9 +84,12 @@ bos = bos +
    * Automatically merges data values onto shapefile
 2. Subsetting to specific geographies is fast and simple
 3. Default aesthetics are optimized for visual clarity
-   * Color gradient corresponds to quantiles of plotted values
+   * Color gradient corresponds to specified quantiles of plotted values
    * Fill and border colors draw attention to the _differences_ between
    geometries rather than the _shape_ of geometries.
+   * Automatically rescales Hawaii and Alaska when plotting entire USA
+   * Automatically applies appropriate coordinate system depending
+   on level of geography plotted
 4. If you don't like the aesthetics, just use `ggplot2::theme`
 and other `ggplot` layers like in the example above
 
