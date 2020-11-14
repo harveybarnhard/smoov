@@ -15,10 +15,11 @@ smoov_plot(
   subsetfips = NULL,
   gradient = "redblue",
   gradient_dir = 1,
-  gradient_breaks = c(0, 0.35, 0.5, 0.65, 1),
+  gradient_breaks = c(0, 0.3, 0.5, 0.7, 1),
   linesize = 0.1,
   alpha = 0.9,
-  bordercolor = NA
+  bordercolor = NA,
+  legend_sigfigs = 2
 )
 }
 \description{

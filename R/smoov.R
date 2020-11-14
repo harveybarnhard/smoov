@@ -33,6 +33,10 @@
 #' * `counties`: Vector of county \href{https://www.nrcs.usda.gov/wps/portal/nrcs/detail/national/home/?cid=nrcs143_013697}{FIPS} codes.
 #'   Character and numeric vectors allowed. If length of `states` vector is
 #'   longer than one, then `counties` vector must be of the same length.
+#' * `tracts`: Vector of tract \href{https://www.policymap.com/2012/08/tips-on-fips-a-quick-guide-to-geographic-place-codes-part-iii/}{FIPS} codes.
+#'   Character and numeric vectors allowed. If length of `states` vector or
+#'   `counties` vector islonger than one, then `tracts` vector must be of
+#'   the same length as `counties` vector.
 #' @section Aesthetic Parameters:
 #' * `gradient`: The color gradient to be plotted, currently only "redblue"
 #' * `gradient_dir`: The direction the color gradient should go. Default is
@@ -93,8 +97,7 @@ smoov = function(geo,
     if(is.null(value)){
       stop("Must provided `value` if providing `data`")
     }
-    inds = .Internal(do.call(what="$", args=list(data,id)))
-    data = data[inds, c(id, value), drop=drop]
+    data = subset.data.frame(data, select=c(id, value))
   }
   return(smoov_plot(geo=shape,
                     data=data,

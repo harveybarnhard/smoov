@@ -51,12 +51,18 @@ be added.
 \description{
 Simple mapping tool
 }
-\section{Subsetting Parameters}{
+\section{Geographic Subsetting Parameters}{
 
 \itemize{
 \item \code{states}: Vector of state \href{https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code}{FIPS} codes.
-String and numeric vectors allowed.
-\item \code{counties}: Vector of \href{https://www.nrcs.usda.gov/wps/portal/nrcs/detail/national/home/?cid=nrcs143_013697}{FIPS} codes
+Character and numeric vectors allowed.
+\item \code{counties}: Vector of county \href{https://www.nrcs.usda.gov/wps/portal/nrcs/detail/national/home/?cid=nrcs143_013697}{FIPS} codes.
+Character and numeric vectors allowed. If length of \code{states} vector is
+longer than one, then \code{counties} vector must be of the same length.
+\item \code{tracts}: Vector of tract \href{https://www.policymap.com/2012/08/tips-on-fips-a-quick-guide-to-geographic-place-codes-part-iii/}{FIPS} codes.
+Character and numeric vectors allowed. If length of \code{states} vector or
+\code{counties} vector islonger than one, then \code{tracts} vector must be of
+the same length as \code{counties} vector.
 }
 }
 
