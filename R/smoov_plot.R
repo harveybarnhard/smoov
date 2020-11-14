@@ -59,7 +59,7 @@ smoov_plot = function(geo,
     }
     if(is.null(value) & is.null(data)){
       basemap = ggplot2::ggplot(shp) +
-        ggplot2::geom_sf() +
+        ggplot2::geom_sf(lwd=linesize) +
         ggplot2::theme_void()
     }else{
       if(gradient=="redblue"){
