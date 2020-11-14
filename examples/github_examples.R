@@ -7,16 +7,22 @@ library(data.table)
 outpath = "C:/Users/hab737/GitHub/smoov/examples"
 
 # Plot all US counties =========================================================
+actcom = function(pop, stayhome ,bcycle, walk){
+  commuters = pop - stayhome
+  commuters[commuters<0] = NA
+  return(
+    100*(bcycle + walk+1)/(commuters+1)
+  )
+}
+
 data(county_commute)
-data = data.table(data)
-data[, commuters := pop_workers - commute_stayhome]
-data[commuters<0, commuters:=NA]
-data[, commute_active := (commute_bcycle + commute_walked+1)/(commuters+1)]
-county_commute = active_commuting(county_commute)
+dtc = data.table(county_commute)
+dtc = dtc[, active := actcom(pop_workers, commute_stayhome,
+                             commute_bcycle, commute_walked)]
 
 # Create fips code and plot
-county_commute[, fips := create_fips(state, county)]
-smoov("counties", data=county_commute, value="commute_active")
+dtc[, fips := create_fips(state, county)]
+smoov("counties", data=dtc, value="active")
 ggsave(file.path(outpath, "county_example.png"))
 
 # Plot Chicago surroundings ====================================================
