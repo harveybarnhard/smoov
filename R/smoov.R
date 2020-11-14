@@ -40,6 +40,8 @@
 #' * `linesize`: The size of the borders of geographic units. Defaults to
 #'   0.05 for plotting tracts, 0.1 for other levels of geography
 #' * `alpha`: Transparency parameter for fill colors. 0 is completely
+#'   transparent and 1 is completely opaque. Defaults to 0.9
+#' * `bordercolor`: Color of geography borders
 #'   transparent and 1 is completely opaque. Defaults to 0.9.
 #'     
 #' @export

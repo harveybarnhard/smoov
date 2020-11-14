@@ -15,7 +15,9 @@ smoov_plot(
   subsetfips = NULL,
   gradient = "redblue",
   direction = 1,
-  linesize = NULL
+  linesize = 0.1,
+  alpha = 0.9,
+  bordercolor = NA
 )
 }
 \description{

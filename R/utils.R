@@ -69,3 +69,12 @@ create_fips = function(state=NULL, county=NULL, tract=NULL){
     return(fips)
   }
 }
+
+# Function to return quantile of values rescaled between 0 and 1
+unitquant = function(x, probs){
+  x = x[!is.na(x)]
+  xmin = min(x)
+  return(
+    (quantile(x,probs=probs) - xmin)/(max(x) - xmin)
+  )
+}

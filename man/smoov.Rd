@@ -64,5 +64,10 @@ Simple mapping tool
 \code{direction=1} for low values to get the first value of the gradient and
 \code{direction=-1} is for low values to get the second value of the
 color gradient.
+\item \code{linesize}: The size of the borders of geographic units. Defaults to
+0.05 for plotting tracts, 0.1 for other levels of geography
+\item \code{alpha}: Transparency parameter for fill colors. 0 is completely
+transparent and 1 is completely opaque. Defaults to 0.9
+\item \code{bordercolor}: Color of geography borders
 }
 }
