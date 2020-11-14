@@ -70,9 +70,7 @@ bos = bos +
   theme(plot.title = element_text(size=20, face="bold", hjust = 0.5),
         plot.subtitle = element_text(size=15, face="bold", hjust = 0.5),
         legend.position=c(0.8,0.9),
-        legend.justification=c(0.8, 0.9),
-        legend.key.size = unit(1.5, "cm"),
-        legend.key.width = unit(0.5,"cm"))
+        legend.justification=c(0.8, 0.9))
 ```
 
 ![](examples/tract_example2.png)
