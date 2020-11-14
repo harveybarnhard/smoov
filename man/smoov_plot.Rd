@@ -14,7 +14,8 @@ smoov_plot(
   class,
   subsetfips = NULL,
   gradient = "redblue",
-  direction = 1,
+  gradient_dir = 1,
+  gradient_breaks = c(0, 0.35, 0.5, 0.65, 1),
   linesize = 0.1,
   alpha = 0.9,
   bordercolor = NA
