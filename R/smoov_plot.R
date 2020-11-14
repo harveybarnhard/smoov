@@ -209,9 +209,7 @@ smoov_plot = function(geo,
       )
     }else{
       return(
-        basemap + ggplot2::theme(legend.position=c(0.05,0.9),
-                                 legend.justification=c(0.05, 0.9),
-                                 legend.key.size = grid::unit(1.5, "cm"),
+        basemap + ggplot2::theme(legend.key.size = grid::unit(1.5, "cm"),
                                  legend.key.width = grid::unit(0.5,"cm"))
           
       )
