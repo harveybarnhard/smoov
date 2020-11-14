@@ -34,8 +34,8 @@ smoov_plot = function(geo,
   
   # Merge data =================================================================
   outlist = shp_data_merge(shp, data, id, value, subsetfips)
-  shp <- outlist[[1]]
-  subset_logic = outlist[[2]]
+  shp = outlist[["shp"]]
+  subset_logic = outlist[["subset_logic"]]
   
   # Create plots ===============================================================
   # Move Hawaii and Alaska
@@ -52,16 +52,10 @@ smoov_plot = function(geo,
                                      xlim=c(-161, -154),
                                      ylim=c(18, 23),
                                      expand=FALSE, datum=NA)
-    
-    # Determine whether to fill in value or just draw borders
-    if(geo=="tract" & is.null(linesize)){
-      linesize=0.05
-    }else if(is.null(linesize)){
-      linesize=0.1
-    }
+
     if(is.null(value) & is.null(data)){
-      basemap = ggplot2::ggplot(shp) +
-        ggplot2::geom_sf(lwd=linesize) +
+      basemap = ggplot2::ggplot() +
+        ggplot2::geom_sf(data=shp, lwd=linesize) +
         ggplot2::theme_void()
     }else{
       if(gradient=="redblue"){
@@ -75,14 +69,16 @@ smoov_plot = function(geo,
       if(gradient_dir==-1){
         colors = rev(colors)
       }
-      values = .Internal(do.call(what="$",
-                                 args=list(shp, value),
-                                 envir=parent.frame()))
+      
+      
+      values = .Internal(
+        do.call(what="$", args=list(shp, value), envir=parent.frame())
+      )
       value_quant = quantile(values, probs=gradient_breaks, na.rm=TRUE)
-      value_range = unitquant(values,
-                              probs=gradient_breaks)
-      basemap = ggplot2::ggplot(shp) +
-        ggplot2::geom_sf(ggplot2::aes(fill=get(value), color=get(value)),
+      value_range = unitquant(values, probs=gradient_breaks)
+      basemap = ggplot2::ggplot() +
+        ggplot2::geom_sf(data=shp,
+                         ggplot2::aes(fill=get(value), color=get(value)),
                          alpha=alpha,
                          size=linesize) +
         ggplot2::scale_fill_gradientn(name="",
@@ -104,18 +100,71 @@ smoov_plot = function(geo,
     
     # Alaska
     if(subset_logic[2]){
-      alaska = basemap + alaska_coord
+      sublog = .Internal(substr(shp$fips, 1L, 2L))=="02"
+      if(is.null(value) & is.null(data)){
+        alaska = ggplot2::ggplot() +
+          ggplot2::geom_sf(data=subset(shp, subset=sublog),lwd=linesize) +
+          ggplot2::theme_void() +
+          alaska_coord
+      }else{
+        alaska = ggplot2::ggplot() +
+          ggplot2::geom_sf(data=subset(shp$data, subset=sublog),
+                           mapping=ggplot2::aes(fill=get(value), color=get(value)),
+                           alpha=alpha,
+                           size=linesize) +
+          ggplot2::scale_fill_gradientn(name="",
+                                        values=value_range,
+                                        colours=colors,
+                                        na.value="#CCCCCC",
+                                        labels=round(value_quant,legend_sigfigs),
+                                        breaks=ifelse(subset_logic[1],
+                                                      NULL,
+                                                      value_quant)) +
+          ggplot2::scale_color_gradientn(name="",
+                                         values=value_range,
+                                         colours=colors,
+                                         na.value="#CCCCCC",
+                                         guide=FALSE) +
+          ggplot2::theme_void() +
+          alaska_coord
+      }
     }else if(subset_logic[1]){
       alaska = ggplot2::ggplot() + ggplot2::theme_void()
     }
     
     # Hawaii
     if(subset_logic[3]){
-      hawaii = basemap + hawaii_coord
+      sublog = .Internal(substr(shp$fips, 1L, 2L))=="15"
+      if(is.null(value) & is.null(data)){
+        hawaii = ggplot2::ggplot() +
+          ggplot2::geom_sf(data=subset(shp, subset=sublog),lwd=linesize) +
+          ggplot2::theme_void() +
+          hawaii_coord
+      }else{
+        hawaii = ggplot2::ggplot() +
+          ggplot2::geom_sf(data=subset(shp$data, subset=sublog),
+                           mapping=ggplot2::aes(fill=get(value), color=get(value)),
+                           alpha=alpha,
+                           size=linesize) +
+          ggplot2::scale_fill_gradientn(name="",
+                                        values=value_range,
+                                        colours=colors,
+                                        na.value="#CCCCCC",
+                                        labels=round(value_quant,legend_sigfigs),
+                                        breaks=ifelse(subset_logic[1],
+                                                      NULL,
+                                                      value_quant)) +
+          ggplot2::scale_color_gradientn(name="",
+                                         values=value_range,
+                                         colours=colors,
+                                         na.value="#CCCCCC",
+                                         guide=FALSE) +
+          ggplot2::theme_void() +
+          hawaii_coord
+      }
     }else if(subset_logic[1]){
       hawaii = ggplot2::ggplot() + ggplot2::theme_void()
     }
-    
     # All US states
     if(subset_logic[1]){
       basemap = basemap + usa_coord
@@ -155,15 +204,15 @@ smoov_plot = function(geo,
           ) +
           ggplot2::theme(legend.position=c(0.05,0.9),
                          legend.justification=c(0.05, 0.9),
-                         legend.key.size = unit(1.5, "cm"),
-                         legend.key.width = unit(0.5,"cm"))
+                         legend.key.size = grid::unit(1.5, "cm"),
+                         legend.key.width = grid::unit(0.5,"cm"))
       )
     }else{
       return(
         basemap + ggplot2::theme(legend.position=c(0.05,0.9),
-                                legend.justification=c(0.05, 0.9),
-                                legend.key.size = unit(1.5, "cm"),
-                                legend.key.width = unit(0.5,"cm"))
+                                 legend.justification=c(0.05, 0.9),
+                                 legend.key.size = grid::unit(1.5, "cm"),
+                                 legend.key.width = grid::unit(0.5,"cm"))
           
       )
     }
