@@ -15,28 +15,24 @@ called `county_commute` with three relevant variables:
 
 * `state`: state FIPS code in integer format
 * `county`: county FIPS code in integer format
-* `active`: % of workers who commute by walking or cycling subtracted
-            by the national % of workers who commute by walking or cycling
+* `active`: % of workers who commute by walking or cycling
 
 In order to create a county-level map, this is all I need to do.
-```r
-# Load data and create active commuter column using pre-made function
-data(county_commute)
-county_commute = active_commuting(county_commute)
 
-# Create FIPS code and plot!
-county_commute[, fips := create_fips(state, county)]
-smoov("counties", data=county_commute, value="active")
+```r
+dtc[, fips := create_fips(state, county)]
+smoov("counties", data=dtc, value="active")
 ```
 
 ![](examples/county_example.png)
 
-The first step uses `smoov::create_fips` to properly concatenate state and
+The first step uses `smoov::create_fips` and `data.table` syntax
+to properly concatenate state and
 county FIPS codes (or state, county, and tract codes), regardless of string
 length. The second step plots at the level of `"counties` using the
-column `"active"` in the dataset `county_commute`.
+column `"active"` in the dataset `dtc`.
 
-Let's say I'm interested in tract-level data in and around Chicago, IL. To produce
+Let's say I'm interested in tract-level data in eastern Massachusetts. To produce
 such maps, this would usually require several slow, multi-line steps:
 
 1. Load shapefile(s).
@@ -47,32 +43,39 @@ such maps, this would usually require several slow, multi-line steps:
 5. Map
 6. Modify map aesthetics
 
-With `smoov` however, steps one through five, and parts of step six
-are simplified to _one line_.
+With `smoov` however, steps one through five&mdash;and parts of step six&mdash;are
+simplified to _one line_.
 First, the level of geography is provided with the `geo` parameter.
 Next, optional subsetting takes place using state, county and tract
 [FIPS](https://transition.fcc.gov/oet/info/maps/census/fips/fips.txt#:~:text=FIPS%20codes%20are%20numbers%20which,to%20which%20the%20county%20belongs.)
-codes. The object produced by `smoov()` is simply a `ggplot2` object, so additional layers
-can be added using the ggplot2 syntax:
+codes. 
 
 ```r
-# Load data and create active commuter column
-data(tract_commute)
-tract_commute = active_commuting(tract_commute)
-tract_commute[, fips := create_fips(state, county, tract)]
-
-# Plot Chicago surroundings and beautify using ggplot layers
-smoov(geo="tracts", data=tract_commute, value="active",
-      states=c(17,17,17,18), counties=c(31,43,197,89)) +
-  labs(title="% of Active Commuters Relative to National Commuting Population",
-       subtitle="Cook (IL), DuPage (IL), Will (IL), and Lake (IN) Counties") +
-  theme(plot.title = element_text(size=20, face="bold", hjust = 0.5),
-        plot.subtitle = element_text(size=15, face="bold", hjust = 0.5),
-        legend.position=c(0.8,0.8),
-        legend.justification=c(0.8, 0.8))
+dtt[, fips := create_fips(state, county, tract)]
+east_MA =  c(1,5,17,21,23,25,027)
+bos = smoov(geo="tracts", data=dtt, value="active", states=25, counties=east_MA)
+bos
 ```
 
-![](examples/tract_example.png)
+![](examples/tract_example1.png)
+
+The object produced by `smoov()` is simply a `ggplot2` object, so additional layers
+can be added using the `ggplot2` syntax. In this case, I want to add a title, add
+a subtitle, and reformat the legend.
+
+```r
+bos = bos +
+  labs(title="Active Commuters in Eastern Massachusetts",
+       subtitle="% of Commuters who Walk or Cycle by Census Tract") +
+  theme(plot.title = element_text(size=20, face="bold", hjust = 0.5),
+        plot.subtitle = element_text(size=15, face="bold", hjust = 0.5),
+        legend.position=c(0.8,0.9),
+        legend.justification=c(0.8, 0.9),
+        legend.key.size = unit(1.5, "cm"),
+        legend.key.width = unit(0.5,"cm"))
+```
+
+![](examples/tract_example2.png)
 
 ## Setup
 
