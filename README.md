@@ -4,7 +4,7 @@ and census tracts. Mapping in R oftentimes involves multiple packages with varyi
 to downright ugly code, and downright ugly maps.
 This package enables **s**imple **m**apping **o**f **o**ur **v**icinities.
 
-For mapping purposes, this package relies heavily upon `ggplot2` while the actual
+For mapping purposes, this package relies heavily upon ggplot2 and sf, while the actual
 downloading of shapefiles is facilitated by the package `tigris`.
 
 # Example
@@ -21,7 +21,7 @@ In order to create a county-level map, this is all I need to do.
 
 ```r
 dtc[, fips := create_fips(state, county)]
-smoov("counties", data=dtc, value="active")
+smoov(geo="counties", data=dtc, value="active")
 ```
 
 ![](examples/county_example.png)
@@ -53,18 +53,18 @@ codes.
 ```r
 dtt[, fips := create_fips(state, county, tract)]
 east_MA =  c(1,5,17,21,23,25,027)
-bos = smoov(geo="tracts", data=dtt, value="active", states=25, counties=east_MA)
-bos
+bos1 = smoov("tracts", data=dtt, value="active", states=25, counties=east_MA)
+bos1
 ```
 
 ![](examples/tract_example1.png)
 
-The object produced by `smoov()` is simply a `ggplot2` object, so additional layers
-can be added using the `ggplot2` syntax. In this case, I want to add a title, add
+The object produced by `smoov()` is simply a ggplot object, so additional layers
+can be added using the ggplot syntax. In this case, I want to add a title, add
 a subtitle, and reformat the legend.
 
 ```r
-bos = bos +
+bos2 = bos1 +
   labs(title="Active Commuters in Eastern Massachusetts",
        subtitle="% of Commuters who Walk or Cycle by Census Tract") +
   theme(plot.title = element_text(size=20, face="bold", hjust = 0.5),
@@ -74,6 +74,36 @@ bos = bos +
 ```
 
 ![](examples/tract_example2.png)
+
+Unfortuantely, with tract-level data it's a little hard to orient ourselves 
+around where Boston is located. It's somewhere in that turquoise blob,
+probably. To bring to light more recognizable geographic features, let's
+add county boundaries using the `smoov_border()` ggplot layer.
+
+```r
+bos3 = bos2 +
+  smoov_border(
+    geo="counties", states=25, counties=east_MA, line_size=1, line_color="grey"
+  )
+bos3
+```
+
+Alright, I know that Boston is in Suffolk County, which encloses
+the eastern half of the turqoise blob. But now I _really_ want to make
+it pop by fading all other counties that aren't Suffolk County. Here
+I can use the `smoov_border()` layer again, this time filling in the
+non-Suffolk counties with a transparent white color to give a nice
+fade.
+
+```r
+not_suffolk = east_MA[east_MA!=25]
+bos4 = bos3 +
+  smoov_border(
+    geo="counties", states=25, counties=not_suffolk,
+    line_alpha=0, fill_color="white", fill_alpha=0.3
+  )
+bos4
+```
 
 ## Features
 
@@ -88,10 +118,11 @@ bos = bos +
    * Automatically rescales Hawaii and Alaska when plotting entire USA
    * Automatically applies appropriate coordinate system depending
    on level of geography plotted
-4. If you don't like the aesthetics, just use `ggplot2::theme`
-and other `ggplot` layers like in the example above
+4. If you don't like the aesthetics, just use `ggplot2::theme()`
+and other ggplot layers like in the example above
+5. Creating boundaries and highlighting tracts is smooth as butter.
 
-## Instllation and Setup
+## Installation and Setup
 
 It's easiest to install this package by running the following line of code in the R
 console.
