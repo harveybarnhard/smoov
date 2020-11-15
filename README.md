@@ -88,6 +88,8 @@ bos3 = bos2 +
 bos3
 ```
 
+![](examples/tract_example3.png)
+
 Alright, I know that Boston is in Suffolk County, which encloses
 the eastern half of the turqoise blob. But now I _really_ want to make
 it pop by fading all other counties that aren't Suffolk County. Here
@@ -104,6 +106,8 @@ bos4 = bos3 +
   )
 bos4
 ```
+
+![](examples/tract_example4.png)
 
 ## Features
 
