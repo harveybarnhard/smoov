@@ -63,14 +63,15 @@ ggsave(file.path(outpath, "tract_example3.png"), plot=bos3)
 
 # Add county highlights for Suffolk County =====================================
 not_suffolk = east_MA[east_MA!=25]
-bos4 = bos3 +
+bos4 = bos2 +
   smoov_border(
     geo="counties", states=25, counties=not_suffolk,
-    line_alpha=0, fill_color="white", fill_alpha=0.3
+    line_alpha=0, fill_color="white", fill_alpha=0.5
   )
 ggsave(file.path(outpath, "tract_example4.png"), plot=bos4)
 
-library(osmdata)
+
+# osm examples =================================================================
 med_streets <- sf::st_bbox(chi$data)%>%
   osmdata::opq()%>%
   osmdata::add_osm_feature(key = "place", value = c("city")) %>%
@@ -87,3 +88,20 @@ labellayer = ggrepel::geom_text_repel(
 )
 
 chi = chi+labellayer
+
+# Interactive examples  ========================================================
+
+bos5 = plotly::ggplotly(bos3)
+
+
+widget_file_size = function(p) {
+  d = tempdir()
+  withr::with_dir(d, htmlwidgets::saveWidget(p, "index.html"))
+  f = file.path(d, "index.html")
+  mb = round(file.info(f)$size/1e6, 3)
+  message("File is: ", mb, " MB")
+}
+
+widget_file_size(plotly::partial_bundle(bostest))
+
+
