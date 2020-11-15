@@ -41,20 +41,34 @@ dtt[, fips := create_fips(state, county, tract)]
 
 # Plot Boston surroundings
 east_MA =  c(1,5,17,21,23,25,027)
-bos = smoov(geo="tracts", data=dtt, value="active", states=25, counties=east_MA)
-ggsave(file.path(outpath, "tract_example1.png"), plot=bos)
+bos1 = smoov("tracts", data=dtt, value="active", states=25, counties=east_MA)
+ggsave(file.path(outpath, "tract_example1.png"), plot=bos1)
 
-# Plot Boston surroundings with titles and formatted legend
-bos = bos +
+# Plot Boston surroundings with titles and formatted legend ====================
+bos2 = bos1 +
   labs(title="Active Commuters in Eastern Massachusetts",
        subtitle="% of Commuters who Walk or Cycle by Census Tract") +
   theme(plot.title = element_text(size=20, face="bold", hjust = 0.5),
         plot.subtitle = element_text(size=15, face="bold", hjust = 0.5),
         legend.position=c(0.8,0.9),
-        legend.justification=c(0.8, 0.9),
-        legend.key.size = unit(1.5, "cm"),
-        legend.key.width = unit(0.5,"cm"))
-ggsave(file.path(outpath, "tract_example2.png"), plot=bos)
+        legend.justification=c(0.8, 0.9))
+ggsave(file.path(outpath, "tract_example2.png"), plot=bos2)
+
+# Add county borders ===========================================================
+bos3 = bos2 +
+  smoov_border(
+    geo="counties", states=25, counties=east_MA, line_size=1, line_color="black"
+  )
+ggsave(file.path(outpath, "tract_example3.png"), plot=bos3)
+
+# Add county highlights for Suffolk County =====================================
+not_suffolk = east_MA[east_MA!=25]
+bos4 = bos3 +
+  smoov_border(
+    geo="counties", states=25, counties=not_suffolk,
+    line_alpha=0, fill_color="white", fill_alpha=0.3
+  )
+ggsave(file.path(outpath, "tract_example4.png"), plot=bos4)
 
 library(osmdata)
 med_streets <- sf::st_bbox(chi$data)%>%
