@@ -1,3 +1,6 @@
 .Rproj.user
 R/.Rhistory
 smoov_mapfiles/
+data-raw/commute_tract.csv
+data-raw/commute_state.csv
+data-raw/commute_county.csv

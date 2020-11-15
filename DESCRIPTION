@@ -20,4 +20,8 @@ Imports:
     data.table,
     ggplot2,
     tigris,
-    data.table
+
+Suggests:
+    ipumsr,
+    httr,
+    jsonlite
