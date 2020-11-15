@@ -109,6 +109,8 @@ bos4
 
 ![](examples/tract_example4.png)
 
+<div w3-include-html="examples/tract_example5.html"></div>
+
 ## Features
 
 1. Reduces hassle
