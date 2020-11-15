@@ -106,6 +106,4 @@ for(geo in c("state", "county", "tract")){
   
   # Output as .rda file
   saveRDS(dt_geo, file=file.path(smoovpath, "data-raw", paste0(geo, "_commute.rds")))
-  assign(paste0(geo ,"_commute"), dt_geo)
-  
 }
