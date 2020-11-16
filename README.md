@@ -109,10 +109,6 @@ bos4
 
 ![](examples/tract_example4.png)
 
-<iframe>
-<div w3-include-html="examples/tract_example5.html"></div>
-</iframe>
-
 ## Features
 
 1. Reduces hassle
