@@ -143,7 +143,6 @@ For reproducability, this step should be placed at the top of the project file w
 you are loading all of your R packages, e.g.
 
 ```r
-library(data.table)
 library(smoov)
 smoov_setup(load_mapfiles=TRUE)
 ```
