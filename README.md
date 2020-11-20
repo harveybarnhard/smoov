@@ -7,6 +7,8 @@ This package enables **s**imple **m**apping **o**f **o**ur **v**icinities.
 For mapping purposes, this package relies heavily upon ggplot2 and sf, while the actual
 downloading of shapefiles is facilitated by the package `tigris`.
 
+:warning: smoov is still under development, please report any and all problems as GitHub issues!
+
 # Example
 
 `smoov` makes maps  with sensible, visually appealing defaults for making maps
