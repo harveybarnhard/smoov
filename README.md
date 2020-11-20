@@ -1,3 +1,5 @@
+:warning: smoov is still under development, please report any and all problems as GitHub issues!
+
 # smoov
 This package intended smooths the process of mapping common objects like states, counties,
 and census tracts. Mapping in R oftentimes involves multiple packages with varying syntaxes, leading
@@ -6,8 +8,6 @@ This package enables **s**imple **m**apping **o**f **o**ur **v**icinities.
 
 For mapping purposes, this package relies heavily upon ggplot2 and sf, while the actual
 downloading of shapefiles is facilitated by the package `tigris`.
-
-:warning: smoov is still under development, please report any and all problems as GitHub issues!
 
 # Example
 
