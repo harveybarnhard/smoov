@@ -2,4 +2,5 @@
 
 export(create_fips)
 export(smoov)
+export(smoov_border)
 export(smoov_setup)
