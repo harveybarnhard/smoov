@@ -13,7 +13,7 @@ shp_data_merge = function(shp,
                           subfips=NULL){
   
   # Perform subsetting operations on shp =======================================
-  shp$state = .Internal(substr(shp$fips, 1L, 2L))
+  shp$state = .Internal(substr(as.character(shp$fips), 1L, 2L))
   if(!is.null(subfips)){
     if(nchar(subfips[1])>nchar(shp$fips[1])){
       stop("You tried to subset to a finer level of geography than provided by ",

@@ -124,6 +124,27 @@ load_states = function(cb, yr, cl, outname){
   return(statemap)
 }
 
+# Function to load commuting zones =============================================
+load_cz = function(){
+  # Create tempfiles
+  temp1 = tempfile()
+  temp2 = tempfile()
+  
+  # Download and unzip CZ data
+  download.file("https://healthinequality.org/dl/cz1990_shapefile.zip", temp1)
+  unzip(zipfile = temp1, exdir = temp2)
+  
+  # Find location of file and read
+  shp_path = list.files(temp2, pattern = ".shp$", full.names=TRUE)
+  czmap = sf::st_read(shp_path)
+  unlink(temp1)
+  unlink(temp2)
+  
+  # Rename cz column to fips
+  names(czmap)[1] = "fips"
+  return(czmap)
+}
+
 # Wrapper for state and county loading =========================================
 geo_loader = function(vec, outpath){
   # Arguments
@@ -147,6 +168,8 @@ geo_loader = function(vec, outpath){
         geomap = load_counties(cb, yr, cl, outname)
       }else if(geo=="states"){
         geomap = load_states(cb, yr, cl, outname)
+      }else if(geo=="cz"){
+        geomap = load_cz()
       }
       saveRDS(geomap, file=filepath)
     }

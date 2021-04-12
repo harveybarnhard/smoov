@@ -5,13 +5,15 @@ geo_alias = data.frame(
            "counties",
            "counties",
            "tracts",
-           "tracts"),
+           "tracts",
+           "cz"),
   alias = c("states",
             "state",
             "counties",
             "county",
             "tracts",
-            "tract")
+            "tract",
+            "cz")
 )
 
 usethis::use_data(

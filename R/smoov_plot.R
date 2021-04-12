@@ -23,9 +23,14 @@ smoov_plot = function(geo,
   
   # Read in the map from .rds format ===========================================
   smoovpath = local(smoovpath, envir=.smoov_env)
-  shppath   = file.path(smoovpath,
-                        paste0(paste(geo, year, detailed, class, sep="_"),
-                               ".rds"))
+  if(geo%in%c("states", "counties", "tracts")){
+    shppath = file.path(
+      smoovpath, paste0(paste(geo, year, detailed, class, sep="_"), ".rds")
+    )
+  }
+  else if(geo=="cz"){
+    shppath = file.path(smoovpath, "cz1990.rds")
+  }
   if(!file.exists(shppath)){
     stop(paste0("no file exists at ", shppath, 
                 " Try other values for `year` `detailed` and `class`."))
@@ -100,7 +105,7 @@ smoov_plot = function(geo,
     
     # Alaska
     if(subset_logic[2]){
-      sublog = .Internal(substr(shp$fips, 1L, 2L))=="02"
+      sublog = .Internal(substr(as.character(shp$fips), 1L, 2L))=="02"
       if(is.null(value) & is.null(data)){
         alaska = ggplot2::ggplot() +
           ggplot2::geom_sf(data=subset(shp, subset=sublog),lwd=linesize) +
@@ -134,7 +139,7 @@ smoov_plot = function(geo,
     
     # Hawaii
     if(subset_logic[3]){
-      sublog = .Internal(substr(shp$fips, 1L, 2L))=="15"
+      sublog = .Internal(substr(as.character(shp$fips), 1L, 2L))=="15"
       if(is.null(value) & is.null(data)){
         hawaii = ggplot2::ggplot() +
           ggplot2::geom_sf(data=subset(shp, subset=sublog),lwd=linesize) +
