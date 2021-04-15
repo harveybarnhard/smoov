@@ -19,8 +19,8 @@ shp_data_merge = function(shp,
       stop("You tried to subset to a finer level of geography than provided by ",
            "`geo`")
     }
-    shp = shp[.Internal(substr(shp$fips, 1L, as.integer(nchar(subfips[1]))))%in%subfips,]
-    unqstates = unique(.Internal(substr(subfips, 1L, 2L)))
+    shp = shp[.Internal(substr(as.character(shp$fips), 1L, as.integer(nchar(subfips[1]))))%in%subfips,]
+    unqstates = unique(.Internal(substr(as.character(subfips), 1L, 2L)))
   }else{
     unqstates = c() 
   }
@@ -63,7 +63,7 @@ shp_data_merge = function(shp,
   # right now
   # TODO: Create look up table for non-FIPS (e.g. state-name entries)
   if(length(subfips)>0){
-    data = data[.Internal(substr(data[, id], 1L, as.integer(nchar(subfips[1]))))%in%subfips,]
+    data = data[.Internal(substr(as.character(data[, id]), 1L, as.integer(nchar(subfips[1]))))%in%subfips,]
   }
   
   # Final step, merge subsetted map and data together
