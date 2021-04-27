@@ -14,7 +14,8 @@ smoov_plot = function(geo,
                       linesize=0.1,
                       alpha=0.9,
                       bordercolor=NA,
-                      legend_sigfigs=2){
+                      legend_sigfigs=2,
+                      discrete=F){
   
   # Handle input ===============================================================
   if(is.logical(detailed)){
@@ -63,39 +64,81 @@ smoov_plot = function(geo,
         ggplot2::geom_sf(data=shp, lwd=linesize) +
         ggplot2::theme_void()
     }else{
-      if(gradient=="redblue"){
-        colors = c("#990000",
-                   "#ff3030",
-                   "#FFD699",
-                   "#007777",
-                   "#005566")
+      # Set Gradient color scheme
+      if(length(gradient)==1){
+        if(gradient=="redblue"){
+          colors = c("#990000",
+                     "#ff3030",
+                     "#FFD699",
+                     "#007777",
+                     "#005566")
+        }
+      }else if(length(gradient)>1){
+        colors = gradient
       }
-      
+      # Reverse gradient?
       if(gradient_dir==-1){
         colors = rev(colors)
       }
       
-      
-      values = shp$value
-      value_quant = quantile(values, probs=gradient_breaks, na.rm=TRUE)
-      value_range = unitquant(values, probs=gradient_breaks)
+      # Create the basemap layer
       basemap = ggplot2::ggplot() +
         ggplot2::geom_sf(data=shp,
-                         mapping=ggplot2::aes(fill=value, color=value, geometry=geometry),
+                         mapping=ggplot2::aes(fill=value,
+                                              color=value,
+                                              geometry=geometry),
                          alpha=alpha,
-                         size=linesize) +
-        ggplot2::scale_fill_gradientn(name="",
-                             values=value_range,
-                             colours=colors,
-                             na.value="#CCCCCC",
-                             labels=round(value_quant,legend_sigfigs),
-                             breaks=value_quant) +
-        ggplot2::scale_color_gradientn(name="",
-                                      values=value_range,
-                                      colours=colors,
-                                      na.value="#CCCCCC",
-                                      guide=FALSE) +
-        ggplot2::theme_void()
+                         size=linesize)
+      
+      values = shp$value
+      if(discrete){
+        # Create the basemap layer
+        num_values = length(unique(values[!is.na(values)]))
+        num_colors = length(colors)
+        if(num_values!=num_colors){
+          stop("Number of colors (", num_colors, ") must match number of values (", num_values,")")
+        }
+        legendopt = "legend"
+        if(length(bordercolor)==1){
+          if(is.na(bordercolor)){
+            bordercolor = colors
+            naborder = "#CCCCCC"
+          }else {
+            bordercolor = rep(bordercolor, num_values)
+            naborder = bordercolor
+          }
+        }else {
+          naborder = "#CCCCCC"
+        }
+        basemap = basemap +
+          ggplot2::scale_fill_manual(name="",
+                                       values=colors,
+                                       na.value="#CCCCCC",
+                                       guide=legendopt) +
+          ggplot2::scale_color_manual(name="",
+                                        values=bordercolor,
+                                        na.value=naborder,
+                                        guide=FALSE) +
+          ggplot2::theme_void()
+      }else {
+        legendopt = "colourbar"
+        value_quant = quantile(values, probs=gradient_breaks, na.rm=TRUE)
+        value_range = unitquant(values, probs=gradient_breaks)
+        basemap = basemap +
+          ggplot2::scale_fill_gradientn(name="",
+                                        values=value_range,
+                                        colours=colors,
+                                        na.value="#CCCCCC",
+                                        labels=round(value_quant,legend_sigfigs),
+                                        breaks=value_quant,
+                                        guide=legendopt) +
+          ggplot2::scale_color_gradientn(name="",
+                                         values=value_range,
+                                         colours=colors,
+                                         na.value="#CCCCCC",
+                                         guide=FALSE) +
+          ggplot2::theme_void()
+      }
     }
     
     # Use different zoom levels depending on subsetting
@@ -115,23 +158,37 @@ smoov_plot = function(geo,
                                                 color=value,
                                                 geometry=geometry),
                            alpha=alpha,
-                           size=linesize) +
-          ggplot2::scale_fill_gradientn(name="",
-                                        values=value_range,
-                                        colours=colors,
-                                        na.value="#CCCCCC",
-                                        labels=round(value_quant,legend_sigfigs),
-                                        breaks=value_quant,
-                                        guide=ifelse(subset_logic[1], 
-                                                     FALSE,
-                                                     "colourbar")) +
-          ggplot2::scale_color_gradientn(name="",
-                                         values=value_range,
-                                         colours=colors,
-                                         na.value="#CCCCCC",
-                                         guide=FALSE) +
-          ggplot2::theme_void() +
-          alaska_coord
+                           size=linesize)
+        if(discrete){
+          alaska = alaska +
+            ggplot2::scale_fill_manual(name="",
+                                       values=colors,
+                                       na.value="#CCCCCC",
+                                       guide=ifelse(subset_logic[1], 
+                                                    FALSE,
+                                                    "legend")) +
+            ggplot2::scale_color_manual(name="",
+                                        values=bordercolor,
+                                        na.value=naborder,
+                                        guide=FALSE)
+        }else {
+          alaska = alaska +
+            ggplot2::scale_fill_gradientn(name="",
+                                          values=value_range,
+                                          colours=colors,
+                                          na.value="#CCCCCC",
+                                          labels=round(value_quant,legend_sigfigs),
+                                          breaks=value_quant,
+                                          guide=ifelse(subset_logic[1], 
+                                                       FALSE,
+                                                       "colourbar")) +
+            ggplot2::scale_color_gradientn(name="",
+                                           values=value_range,
+                                           colours=colors,
+                                           na.value="#CCCCCC",
+                                           guide=FALSE)
+        }
+        alaska = alaska + alaska_coord + ggplot2::theme_void()
       }
     }else if(subset_logic[1]){
       alaska = ggplot2::ggplot() + ggplot2::theme_void()
@@ -148,25 +205,41 @@ smoov_plot = function(geo,
       }else{
         hawaii = ggplot2::ggplot() +
           ggplot2::geom_sf(data=subset(shp, subset=sublog),
-                           mapping=ggplot2::aes(fill=value, color=value, geometry=geometry),
+                           mapping=ggplot2::aes(fill=value,
+                                                color=value,
+                                                geometry=geometry),
                            alpha=alpha,
-                           size=linesize) +
-          ggplot2::scale_fill_gradientn(name="",
-                                        values=value_range,
-                                        colours=colors,
-                                        na.value="#CCCCCC",
-                                        labels=round(value_quant,legend_sigfigs),
-                                        breaks=value_quant,
-                                        guide=ifelse(subset_logic[1], 
-                                                     FALSE,
-                                                     "colourbar")) +
-          ggplot2::scale_color_gradientn(name="",
-                                         values=value_range,
-                                         colours=colors,
-                                         na.value="#CCCCCC",
-                                         guide=FALSE) +
-          ggplot2::theme_void() +
-          hawaii_coord
+                           size=linesize)
+        if(discrete){
+          hawaii = hawaii +
+            ggplot2::scale_fill_manual(name="",
+                                       values=colors,
+                                       na.value="#CCCCCC",
+                                       guide=ifelse(subset_logic[1], 
+                                                    FALSE,
+                                                    "legend")) +
+            ggplot2::scale_color_manual(name="",
+                                        values=bordercolor,
+                                        na.value=naborder,
+                                        guide=FALSE)
+        }else {
+          hawaii = hawaii +
+            ggplot2::scale_fill_gradientn(name="",
+                                          values=value_range,
+                                          colours=colors,
+                                          na.value="#CCCCCC",
+                                          labels=round(value_quant,legend_sigfigs),
+                                          breaks=value_quant,
+                                          guide=ifelse(subset_logic[1], 
+                                                       FALSE,
+                                                       "colourbar")) +
+            ggplot2::scale_color_gradientn(name="",
+                                           values=value_range,
+                                           colours=colors,
+                                           na.value="#CCCCCC",
+                                           guide=FALSE)
+        }
+        hawaii = hawaii + hawaii_coord + ggplot2::theme_void()
       }
     }else if(subset_logic[1]){
       hawaii = ggplot2::ggplot() + ggplot2::theme_void()
@@ -219,19 +292,6 @@ smoov_plot = function(geo,
                                  legend.key.width = grid::unit(0.5,"cm"))
           
       )
-    }
-  }else if(class=="sp"){
-    if(length(value)==0 & is.null(data)){
-      return(ggplot2::ggplot(shp, mapping=aes(x=long,
-                                              y=lat,
-                                              group=group)) +
-               ggplot2::geom_polygon())
-    }else{
-      return(ggplot2::ggplot(shp, mapping=aes(x=long,
-                                              y=lat,
-                                              group=group,
-                                              fill=value)) +
-               ggplot2::geom_polygon())
     }
   }
 }
