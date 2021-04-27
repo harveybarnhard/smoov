@@ -67,6 +67,7 @@ shp_data_merge = function(shp,
   }
   
   # Final step, merge subsetted map and data together
-  shp  = merge(shp, data, by.x="fips", by.y=id, all.x=TRUE)
+  names(data)[names(data)==value] = "value"
+  shp  = merge(shp, data[, c("fips", "value")], by.x="fips", by.y=id, all.x=TRUE)
   return(list(shp = shp, subset_logic = c(usa, alaska, hawaii)))
 }

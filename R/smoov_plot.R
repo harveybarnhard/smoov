@@ -76,14 +76,12 @@ smoov_plot = function(geo,
       }
       
       
-      values = .Internal(
-        do.call(what="$", args=list(shp, value), envir=parent.frame())
-      )
+      values = shp$value
       value_quant = quantile(values, probs=gradient_breaks, na.rm=TRUE)
       value_range = unitquant(values, probs=gradient_breaks)
       basemap = ggplot2::ggplot() +
         ggplot2::geom_sf(data=shp,
-                         ggplot2::aes(fill=get(value), color=get(value)),
+                         mapping=ggplot2::aes(fill=value, color=value, geometry=geometry),
                          alpha=alpha,
                          size=linesize) +
         ggplot2::scale_fill_gradientn(name="",
@@ -102,7 +100,6 @@ smoov_plot = function(geo,
     
     # Use different zoom levels depending on subsetting
     # TODO: subset in shp_data_merge set for HI and AK
-    
     # Alaska
     if(subset_logic[2]){
       sublog = .Internal(substr(as.character(shp$fips), 1L, 2L))=="02"
@@ -113,8 +110,10 @@ smoov_plot = function(geo,
           alaska_coord
       }else{
         alaska = ggplot2::ggplot() +
-          ggplot2::geom_sf(data=subset(shp$data, subset=sublog),
-                           mapping=ggplot2::aes(fill=get(value), color=get(value)),
+          ggplot2::geom_sf(data=subset(shp, subset=sublog),
+                           mapping=ggplot2::aes(fill=value,
+                                                color=value,
+                                                geometry=geometry),
                            alpha=alpha,
                            size=linesize) +
           ggplot2::scale_fill_gradientn(name="",
@@ -122,9 +121,10 @@ smoov_plot = function(geo,
                                         colours=colors,
                                         na.value="#CCCCCC",
                                         labels=round(value_quant,legend_sigfigs),
-                                        breaks=ifelse(subset_logic[1],
-                                                      NULL,
-                                                      value_quant)) +
+                                        breaks=value_quant,
+                                        guide=ifelse(subset_logic[1], 
+                                                     FALSE,
+                                                     "colourbar")) +
           ggplot2::scale_color_gradientn(name="",
                                          values=value_range,
                                          colours=colors,
@@ -147,8 +147,8 @@ smoov_plot = function(geo,
           hawaii_coord
       }else{
         hawaii = ggplot2::ggplot() +
-          ggplot2::geom_sf(data=subset(shp$data, subset=sublog),
-                           mapping=ggplot2::aes(fill=get(value), color=get(value)),
+          ggplot2::geom_sf(data=subset(shp, subset=sublog),
+                           mapping=ggplot2::aes(fill=value, color=value, geometry=geometry),
                            alpha=alpha,
                            size=linesize) +
           ggplot2::scale_fill_gradientn(name="",
@@ -156,9 +156,10 @@ smoov_plot = function(geo,
                                         colours=colors,
                                         na.value="#CCCCCC",
                                         labels=round(value_quant,legend_sigfigs),
-                                        breaks=ifelse(subset_logic[1],
-                                                      NULL,
-                                                      value_quant)) +
+                                        breaks=value_quant,
+                                        guide=ifelse(subset_logic[1], 
+                                                     FALSE,
+                                                     "colourbar")) +
           ggplot2::scale_color_gradientn(name="",
                                          values=value_range,
                                          colours=colors,
@@ -229,7 +230,7 @@ smoov_plot = function(geo,
       return(ggplot2::ggplot(shp, mapping=aes(x=long,
                                               y=lat,
                                               group=group,
-                                              fill=get(value))) +
+                                              fill=value)) +
                ggplot2::geom_polygon())
     }
   }
