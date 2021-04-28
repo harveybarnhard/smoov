@@ -98,6 +98,7 @@ smoov_plot = function(geo,
         if(num_values!=num_colors){
           stop("Number of colors (", num_colors, ") must match number of values (", num_values,")")
         }
+        unq_values = unique(values[!is.na(values)])
         legendopt = "legend"
         if(length(bordercolor)==1){
           if(is.na(bordercolor)){
@@ -160,9 +161,13 @@ smoov_plot = function(geo,
                            alpha=alpha,
                            size=linesize)
         if(discrete){
+          # Determine the color palette
+          temp = subset(shp, subset=sublog)
+          alaska_vals = unq_values %in% temp$value
           alaska = alaska +
             ggplot2::scale_fill_manual(name="",
-                                       values=colors,
+                                       breaks=sort(unq_values)[alaska_vals],
+                                       values=colors[alaska_vals],
                                        na.value="#CCCCCC",
                                        guide=ifelse(subset_logic[1], 
                                                     FALSE,
@@ -171,6 +176,8 @@ smoov_plot = function(geo,
                                         values=bordercolor,
                                         na.value=naborder,
                                         guide=FALSE)
+          rm(temp)
+          gc()
         }else {
           alaska = alaska +
             ggplot2::scale_fill_gradientn(name="",
@@ -211,9 +218,13 @@ smoov_plot = function(geo,
                            alpha=alpha,
                            size=linesize)
         if(discrete){
+          # Determine the color palette
+          temp = subset(shp, subset=sublog)
+          hawaii_vals = unq_values %in% temp$value
           hawaii = hawaii +
             ggplot2::scale_fill_manual(name="",
-                                       values=colors,
+                                       breaks=sort(unq_values)[hawaii_vals],
+                                       values=colors[hawaii_vals],
                                        na.value="#CCCCCC",
                                        guide=ifelse(subset_logic[1], 
                                                     FALSE,
@@ -222,6 +233,8 @@ smoov_plot = function(geo,
                                         values=bordercolor,
                                         na.value=naborder,
                                         guide=FALSE)
+          rm(temp)
+          gc()
         }else {
           hawaii = hawaii +
             ggplot2::scale_fill_gradientn(name="",
