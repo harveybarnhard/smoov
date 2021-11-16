@@ -4,7 +4,7 @@ library(ggplot2)
 library(data.table)
 
 # Set outpath for figures
-outpath = "C:/Users/hab737/GitHub/smoov/examples"
+outpath = file.path(.github, "smoov/examples")
 
 # Plot all US counties =========================================================
 actcom = function(pop, stayhome, bcycle, walk){
@@ -92,7 +92,6 @@ chi = chi+labellayer
 # Interactive examples  ========================================================
 
 bos5 = plotly::ggplotly(bos3)
-
 
 widget_file_size = function(p) {
   d = tempdir()
